@@ -1,3 +1,4 @@
+//app/index.tsx
 import { useAuthStore } from "@/src/stores/auth.store";
 import { Redirect } from "expo-router";
 import { ActivityIndicator, Image, View } from "react-native";
@@ -9,7 +10,7 @@ export default function Index() {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#000000",
+        backgroundColor: "pink",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -22,11 +23,7 @@ export default function Index() {
 
       <ActivityIndicator size="large" color="#F4B400" />
 
-      {user ? (
-        <Redirect href="/(tabs)/home" />
-      ) : (
-        <Redirect href="/(auth)/login" />
-      )}
+      {user ? <Redirect href="/(tabs)" /> : <Redirect href="/(auth)/login" />}
     </View>
   );
 }

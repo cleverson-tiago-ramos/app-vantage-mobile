@@ -1,3 +1,4 @@
+// src/api/apiClient.ts
 import axios from "axios";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
@@ -12,10 +13,6 @@ export const apiClient = axios.create({
   },
 });
 
-/**
- * Interceptor de request
- * Apenas infra
- */
 apiClient.interceptors.request.use(async (config) => {
   const token = await SecureStore.getItemAsync("accessToken");
 
