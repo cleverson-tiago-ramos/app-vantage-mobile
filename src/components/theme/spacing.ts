@@ -1,3 +1,4 @@
+// src/components/theme/spacing.ts
 export const spacing = {
   screenHorizontal: 20, // padrão iOS/Android
   screenVertical: 16,
