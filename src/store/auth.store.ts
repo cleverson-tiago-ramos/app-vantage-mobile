@@ -1,4 +1,4 @@
-import { User } from "@/src/models/users/User";
+import { User } from "@/src/domain/models/users/User";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 

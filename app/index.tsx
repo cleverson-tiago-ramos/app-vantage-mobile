@@ -1,29 +1,19 @@
-//app/index.tsx
-import { useAuthStore } from "@/src/user/auth.store";
+import { useAuthStore } from "@/src/store/auth.store";
 import { Redirect } from "expo-router";
-import { ActivityIndicator, Image, View } from "react-native";
 
+/**
+ * Entry point da aplicação.
+ * Responsável apenas por redirecionar o usuário
+ * com base no estado de autenticação.
+ */
 export default function Index() {
   const user = useAuthStore((s) => s.user);
 
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "pink",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Image
-        source={require("../assets/images/logo.png")}
-        style={{ width: 140, height: 140, marginBottom: 24 }}
-        resizeMode="contain"
-      />
+  // Se estiver logado, vai para o app principal
+  if (user) {
+    return <Redirect href="/(tabs)" />;
+  }
 
-      <ActivityIndicator size="large" color="#F4B400" />
-
-      {user ? <Redirect href="/(tabs)" /> : <Redirect href="/(auth)/login" />}
-    </View>
-  );
+  // Caso contrário, vai para o fluxo de autenticação
+  return <Redirect href="/(auth)/login" />;
 }
