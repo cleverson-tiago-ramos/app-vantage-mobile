@@ -5,15 +5,22 @@ import { StyleSheet } from "react-native";
 export const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.light },
   container: { flex: 1, paddingHorizontal: spacing.screenHorizontal },
-
-  back: { marginTop: spacing.md },
+  header: {
+    alignItems: "center",
+    marginBottom: spacing.sm,
+  },
+  back: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+  },
   logo: {
     width: "100%",
-    height: 120,
-    marginVertical: spacing.xl,
+    height: 70, //
+    marginVertical: spacing.md,
   },
 
-  form: { marginTop: spacing.sm },
+  form: { marginTop: spacing.sm, paddingBottom: spacing.xl * 2 },
   label: { fontSize: 14, color: colors.textPrimary },
   labelMargin: { marginTop: spacing.lg },
 
@@ -55,5 +62,22 @@ export const styles = StyleSheet.create({
   link: {
     color: colors.info,
     fontWeight: "600",
+  },
+
+  select: {
+    borderWidth: 1,
+    borderColor: colors.gray,
+    borderRadius: 8,
+    padding: spacing.md,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  footer: {
+    paddingVertical: spacing.md,
+  },
+  selectText: {
+    fontSize: 16,
+    color: colors.textPrimary,
   },
 });

@@ -4,7 +4,26 @@ import { useState } from "react";
 
 export function useRegisterViewModel() {
   const router = useRouter();
-
+  const [birthDate, setBirthDate] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "other" | null>(
+    null
+  );
+  const [showGender, setShowGender] = useState(false);
+  function toggleGender() {
+    // por enquanto só alterna (pronto para modal depois)
+    if (!gender) setGender("male");
+    else if (gender === "male") setGender("female");
+    else if (gender === "female") setGender("other");
+    else setGender(null);
+  }
+  const genderLabel =
+    gender === "male"
+      ? "Masculino"
+      : gender === "female"
+      ? "Feminino"
+      : gender === "other"
+      ? "Outro"
+      : "";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
@@ -49,6 +68,9 @@ export function useRegisterViewModel() {
     name,
     email,
     cpf,
+    birthDate,
+    gender,
+    genderLabel,
     password,
     confirmPassword,
     loading,
@@ -56,8 +78,10 @@ export function useRegisterViewModel() {
     setName,
     setEmail,
     setCpf,
+    setBirthDate,
     setPassword,
     setConfirmPassword,
+    toggleGender,
     submit,
   };
 }
