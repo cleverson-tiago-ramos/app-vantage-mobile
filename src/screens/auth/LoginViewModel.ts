@@ -7,7 +7,7 @@ export function useLoginViewModel() {
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-
+  const [focus, setFocus] = useState<"email" | "password" | null>(null);
   async function submit() {
     if (!identifier || !password) return;
     await login(identifier, password);
@@ -18,6 +18,8 @@ export function useLoginViewModel() {
     password,
     loading,
     error,
+    focus,
+    setFocus,
     setIdentifier,
     setPassword,
     submit,

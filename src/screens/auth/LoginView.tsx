@@ -1,15 +1,36 @@
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Image,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginViewModel } from "./LoginViewModel";
 import { styles } from "./styles";
 
 export function LoginView() {
   const vm = useLoginViewModel();
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.back}>
+        <TouchableOpacity
+          style={styles.back}
+          onPress={() => {
+            if (router.canGoBack()) {
+              router.back();
+            } else {
+              router.replace("/(tabs)");
+            }
+          }}
+        >
           <Text style={styles.backText}>← Voltar</Text>
         </TouchableOpacity>
 
@@ -22,25 +43,39 @@ export function LoginView() {
         <View style={styles.form}>
           <Text style={styles.label}>E-mail</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, vm.focus === "email" && styles.inputFocused]}
             placeholder="Digite seu e-mail"
             placeholderTextColor="#aaa"
             value={vm.identifier}
             onChangeText={vm.setIdentifier}
+            onFocus={() => vm.setFocus("email")}
+            onBlur={() => vm.setFocus(null)}
             autoCapitalize="none"
           />
 
           <Text style={[styles.label, styles.labelMargin]}>Senha</Text>
           <View style={styles.passwordWrapper}>
             <TextInput
-              style={[styles.input, styles.passwordInput]}
+              style={[
+                styles.input,
+                styles.passwordInput,
+                vm.focus === "password" && styles.inputFocused,
+              ]}
               placeholder="Digite sua senha"
               placeholderTextColor="#aaa"
-              secureTextEntry
+              secureTextEntry={!showPassword}
               value={vm.password}
               onChangeText={vm.setPassword}
+              onFocus={() => vm.setFocus("password")}
+              onBlur={() => vm.setFocus(null)}
             />
-            <Text style={styles.eye}>👁</Text>
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <Ionicons
+                name={showPassword ? "eye-off" : "eye"}
+                size={22}
+                color="#777"
+              />
+            </TouchableOpacity>
           </View>
 
           <TouchableOpacity>
@@ -49,10 +84,16 @@ export function LoginView() {
 
           {vm.error && <Text style={styles.error}>{vm.error}</Text>}
 
-          <TouchableOpacity style={styles.button} onPress={vm.submit}>
-            <Text style={styles.buttonText}>
-              {vm.loading ? "Entrando..." : "Entrar"}
-            </Text>
+          <TouchableOpacity
+            style={[styles.button, vm.loading && styles.buttonDisabled]}
+            onPress={vm.submit}
+            disabled={vm.loading}
+          >
+            {vm.loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Entrar</Text>
+            )}
           </TouchableOpacity>
 
           <Text style={styles.register}>

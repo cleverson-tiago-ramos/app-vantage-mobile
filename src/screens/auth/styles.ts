@@ -52,7 +52,13 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textPrimary,
   },
+  inputFocused: {
+    borderColor: colors.primary,
+  },
 
+  buttonDisabled: {
+    opacity: 0.7,
+  },
   passwordWrapper: {
     flexDirection: "row",
     alignItems: "center",
@@ -60,6 +66,7 @@ export const styles = StyleSheet.create({
 
   passwordInput: {
     flex: 1,
+    marginRight: spacing.sm,
   },
 
   eye: {
@@ -69,7 +76,7 @@ export const styles = StyleSheet.create({
   },
 
   forgot: {
-    color: colors.primary,
+    color: colors.info,
     fontSize: 14,
     alignSelf: "flex-end",
     marginTop: spacing.sm,
@@ -82,7 +89,7 @@ export const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: colors.primary,
+    backgroundColor: colors.success,
     paddingVertical: spacing.lg,
     borderRadius: 8,
     marginTop: spacing.xl,
@@ -102,7 +109,7 @@ export const styles = StyleSheet.create({
   },
 
   registerLink: {
-    color: colors.primary,
+    color: colors.info,
     fontWeight: "600",
   },
 });
