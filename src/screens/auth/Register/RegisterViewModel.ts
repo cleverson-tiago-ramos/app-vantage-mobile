@@ -1,21 +1,35 @@
 import { createUser } from "@/src/services/auth.service";
+import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export function useRegisterViewModel() {
   const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [gender, setGender] = useState<"male" | "female" | "other" | null>(
     null
   );
-  const [showGender, setShowGender] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  function touch(field: string) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }
+
   function toggleGender() {
-    // por enquanto só alterna (pronto para modal depois)
     if (!gender) setGender("male");
     else if (gender === "male") setGender("female");
     else if (gender === "female") setGender("other");
     else setGender(null);
   }
+
   const genderLabel =
     gender === "male"
       ? "Masculino"
@@ -24,89 +38,62 @@ export function useRegisterViewModel() {
       : gender === "other"
       ? "Outro"
       : "";
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [cpf, setCpf] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  async function submit() {
-    setError(null);
-
-    if (!name || !email || !cpf || !password) {
-      setError("Preencha todos os campos obrigatórios");
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("As senhas não conferem");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      await createUser({
-        name,
-        email,
-        cpf,
-        password,
-      });
-
-      router.replace("/(auth)/login");
-    } catch (e: any) {
-      setError(e?.message || "Erro ao criar conta");
-    } finally {
-      setLoading(false);
-    }
-  }
-  function touch(field: string) {
-    setTouched((prev) => ({ ...prev, [field]: true }));
-  }
 
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const isCpfValid = isValidCPF(cpf);
 
-  const isCpfValid = cpf.replace(/\D/g, "").length === 11;
+  const passwordRules = {
+    min: password.length >= 8,
+    upper: /[A-Z]/.test(password),
+    lower: /[a-z]/.test(password),
+    number: /\d/.test(password),
+    special: /[^A-Za-z0-9]/.test(password),
+  };
+
+  const isPasswordStrong = Object.values(passwordRules).every(Boolean);
 
   const isFormValid =
     name.trim().length > 0 &&
     isEmailValid &&
     isCpfValid &&
-    birthDate.trim().length === 10 &&
+    birthDate.length === 10 &&
     gender !== null &&
-    password.length >= 6 &&
+    isPasswordStrong &&
     password === confirmPassword;
 
   const errors = {
-    name:
-      touched.name && name.trim().length === 0
-        ? "Informe seu nome completo"
-        : undefined,
-
+    name: touched.name && !name ? "Informe seu nome completo" : undefined,
     email: touched.email && !isEmailValid ? "E-mail inválido" : undefined,
-
     cpf: touched.cpf && !isCpfValid ? "CPF inválido" : undefined,
-
     birthDate:
-      touched.birthDate && birthDate.trim().length !== 10
+      touched.birthDate && birthDate.length !== 10
         ? "Data inválida"
         : undefined,
-
     gender: touched.gender && !gender ? "Selecione um gênero" : undefined,
-
     password:
-      touched.password && password.length < 6
-        ? "Senha deve ter ao menos 6 caracteres"
+      touched.password && !isPasswordStrong
+        ? "Senha fraca. Use letras, número e símbolo."
         : undefined,
-
     confirmPassword:
       touched.confirmPassword && password !== confirmPassword
         ? "As senhas não conferem"
         : undefined,
   };
+
+  async function submit() {
+    if (!isFormValid) return;
+
+    setLoading(true);
+    await createUser({
+      name,
+      email,
+      cpf,
+      password,
+    });
+
+    setLoading(false);
+    router.replace("/(auth)/login");
+  }
 
   return {
     name,
