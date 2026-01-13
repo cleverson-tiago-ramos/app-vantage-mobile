@@ -96,7 +96,10 @@ export function LoginView() {
             )}
           </TouchableOpacity>
 
-          <Text style={styles.register}>
+          <Text
+            style={styles.register}
+            onPress={() => router.push("/(auth)/register")}
+          >
             Primeiro acesso?{" "}
             <Text style={styles.registerLink}>Cadastre-se</Text>
           </Text>
