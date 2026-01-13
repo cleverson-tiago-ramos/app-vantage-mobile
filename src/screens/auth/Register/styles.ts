@@ -7,9 +7,13 @@ export const styles = StyleSheet.create({
   container: { flex: 1, paddingHorizontal: spacing.screenHorizontal },
 
   back: { marginTop: spacing.md },
-  logo: { height: 120, marginVertical: spacing.xl },
+  logo: {
+    width: "100%",
+    height: 120,
+    marginVertical: spacing.xl,
+  },
 
-  form: { marginTop: spacing.lg },
+  form: { marginTop: spacing.sm },
   label: { fontSize: 14, color: colors.textPrimary },
   labelMargin: { marginTop: spacing.lg },
 

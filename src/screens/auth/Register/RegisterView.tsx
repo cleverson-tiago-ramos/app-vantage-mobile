@@ -11,10 +11,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
 import { useRegisterViewModel } from "./RegisterViewModel";
 import { styles } from "./styles";
 
-export function RegisterView() {
+export default function RegisterView() {
   const vm = useRegisterViewModel();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
@@ -28,7 +29,7 @@ export function RegisterView() {
         </TouchableOpacity>
 
         <Image
-          source={require("@/assets/images/logo_padrao.png")}
+          source={require("@/assets/images/logo1x.png")}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -37,7 +38,6 @@ export function RegisterView() {
           <Text style={styles.label}>Nome completo</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite seu nome"
             value={vm.name}
             onChangeText={vm.setName}
           />
@@ -45,7 +45,6 @@ export function RegisterView() {
           <Text style={styles.labelMargin}>E-mail</Text>
           <TextInput
             style={styles.input}
-            placeholder="Digite seu e-mail"
             autoCapitalize="none"
             value={vm.email}
             onChangeText={vm.setEmail}
@@ -54,7 +53,6 @@ export function RegisterView() {
           <Text style={styles.labelMargin}>CPF</Text>
           <TextInput
             style={styles.input}
-            placeholder="000.000.000-00"
             keyboardType="numeric"
             value={vm.cpf}
             onChangeText={vm.setCpf}
@@ -106,12 +104,6 @@ export function RegisterView() {
             ) : (
               <Text style={styles.buttonText}>Cadastrar</Text>
             )}
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => router.replace("/(auth)/login")}>
-            <Text style={styles.loginLink}>
-              Já tem conta? <Text style={styles.link}>Faça login</Text>
-            </Text>
           </TouchableOpacity>
         </View>
       </View>
