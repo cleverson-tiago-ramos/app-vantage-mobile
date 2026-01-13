@@ -13,7 +13,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import { useRegisterViewModel } from "./RegisterViewModel";
 import { styles } from "./styles";
@@ -23,7 +26,7 @@ export default function RegisterView() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
+  const insets = useSafeAreaInsets();
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <KeyboardAvoidingView
@@ -128,8 +131,7 @@ export default function RegisterView() {
             {vm.error && <Text style={styles.error}>{vm.error}</Text>}
           </ScrollView>
 
-          {/* FOOTER FIXO */}
-          <View style={styles.footer}>
+          <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
             <TouchableOpacity
               style={[styles.button, vm.loading && styles.buttonDisabled]}
               onPress={vm.submit}

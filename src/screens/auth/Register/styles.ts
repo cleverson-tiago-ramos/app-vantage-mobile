@@ -75,6 +75,8 @@ export const styles = StyleSheet.create({
   },
   footer: {
     paddingVertical: spacing.md,
+    paddingTop: spacing.sm,
+    backgroundColor: colors.light,
   },
   selectText: {
     fontSize: 16,
