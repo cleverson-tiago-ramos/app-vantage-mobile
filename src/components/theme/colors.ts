@@ -12,4 +12,5 @@ export const colors = {
   error: "#d32f2f",
   info: "#0288d1",
   textPrimary: "#2c2c2b",
+  textSecondary: "#6c6c6c",
 };

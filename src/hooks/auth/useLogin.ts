@@ -22,7 +22,7 @@ export function useLogin() {
       showToast("Login realizado com sucesso!", "success");
     } catch (err) {
       setError("Credenciais inválidas");
-      showToast("E-mail ou senha incorretos", "error");
+      showToast("Email/CPF ou senha incorretos", "error");
       // ⛔ NÃO relança erro
     } finally {
       setLoading(false);
