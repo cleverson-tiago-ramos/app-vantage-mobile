@@ -76,13 +76,28 @@ export const styles = StyleSheet.create({
   passwordWrapper: {
     flexDirection: "row",
     alignItems: "center",
+
+    position: "relative",
+    width: "100%",
+    borderWidth: 1,
+    borderColor: colors.gray,
+    borderRadius: 8,
   },
 
   passwordInput: {
     flex: 1,
     marginRight: spacing.sm,
+    width: "100%",
+    borderWidth: 0,
+    borderColor: "#fff",
+    borderRadius: 8,
   },
+  iconEye: {
+    right: 10,
 
+    padding: 5,
+    borderRadius: 5,
+  },
   /* =========================
    * SELECT / DROPDOWN
    * ========================= */
@@ -150,5 +165,16 @@ export const styles = StyleSheet.create({
   link: {
     color: colors.info,
     fontWeight: "600",
+  },
+  helpText: {
+    fontSize: 12,
+    color: colors.textSecondary ?? "#777",
+    marginTop: 4,
+  },
+  content: {
+    display: "flex",
+    flexDirection: "column",
+    padding: spacing.md,
+    gap: spacing.xs,
   },
 });

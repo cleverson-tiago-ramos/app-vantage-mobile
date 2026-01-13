@@ -18,6 +18,7 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import { maskCPF, maskDate } from "@/src/utils/masks";
 import { useRegisterViewModel } from "./RegisterViewModel";
 import { styles } from "./styles";
 
@@ -59,128 +60,147 @@ export default function RegisterView() {
             contentContainerStyle={styles.form}
             keyboardShouldPersistTaps="handled"
           >
-            {/* NOME */}
-            <Text style={styles.label}>Nome completo</Text>
-            <TextInput
-              style={[styles.input, vm.errors.name && styles.inputError]}
-              value={vm.name}
-              onChangeText={vm.setName}
-              onBlur={() => vm.touch("name")}
-            />
-            {vm.errors.name && (
-              <Text style={styles.fieldError}>{vm.errors.name}</Text>
-            )}
+            <View style={styles.content}>
+              {/* NOME */}
+              <Text style={styles.label}>Nome completo</Text>
+              <TextInput
+                style={[styles.input, vm.errors.name && styles.inputError]}
+                value={vm.name}
+                onChangeText={vm.setName}
+                onBlur={() => vm.touch("name")}
+              />
+              {vm.errors.name && (
+                <Text style={styles.fieldError}>{vm.errors.name}</Text>
+              )}
 
-            {/* EMAIL */}
-            <Text style={styles.labelMargin}>E-mail</Text>
-            <TextInput
-              style={[styles.input, vm.errors.email && styles.inputError]}
-              autoCapitalize="none"
-              value={vm.email}
-              onChangeText={vm.setEmail}
-              onBlur={() => vm.touch("email")}
-            />
-            {vm.errors.email && (
-              <Text style={styles.fieldError}>{vm.errors.email}</Text>
-            )}
+              {/* EMAIL */}
+              <Text style={styles.labelMargin}>E-mail</Text>
+              <TextInput
+                style={[styles.input, vm.errors.email && styles.inputError]}
+                autoCapitalize="none"
+                value={vm.email}
+                onChangeText={vm.setEmail}
+                onBlur={() => vm.touch("email")}
+              />
+              {vm.errors.email && (
+                <Text style={styles.fieldError}>{vm.errors.email}</Text>
+              )}
 
-            {/* CPF */}
-            <Text style={styles.labelMargin}>CPF</Text>
-            <TextInput
-              style={[styles.input, vm.errors.cpf && styles.inputError]}
-              keyboardType="numeric"
-              placeholder="000.000.000-00"
-              value={vm.cpf}
-              onChangeText={vm.setCpf}
-              onBlur={() => vm.touch("cpf")}
-            />
-            {vm.errors.cpf && (
-              <Text style={styles.fieldError}>{vm.errors.cpf}</Text>
-            )}
+              {/* CPF */}
+              <Text style={styles.labelMargin}>CPF</Text>
+              <TextInput
+                style={[styles.input, vm.errors.cpf && styles.inputError]}
+                keyboardType="numeric"
+                placeholder="000.000.000-00"
+                value={vm.cpf}
+                onChangeText={(text) => vm.setCpf(maskCPF(text))}
+                onBlur={() => vm.touch("cpf")}
+              />
 
-            {/* DATA NASCIMENTO */}
-            <Text style={styles.labelMargin}>Data de nascimento</Text>
-            <TextInput
-              style={[styles.input, vm.errors.birthDate && styles.inputError]}
-              placeholder="dd/mm/aaaa"
-              keyboardType="numeric"
-              value={vm.birthDate}
-              onChangeText={vm.setBirthDate}
-              onBlur={() => vm.touch("birthDate")}
-            />
-            {vm.errors.birthDate && (
-              <Text style={styles.fieldError}>{vm.errors.birthDate}</Text>
-            )}
-
-            {/* GÊNERO */}
-            <Text style={styles.labelMargin}>Gênero</Text>
-            <TouchableOpacity
-              style={[styles.select, vm.errors.gender && styles.inputError]}
-              onPress={() => {
-                vm.toggleGender();
-                vm.touch("gender");
-              }}
-            >
-              <Text style={styles.selectText}>
-                {vm.genderLabel || "Selecione"}
+              <Text style={styles.helpText}>
+                Digite apenas números. Ex: 123.456.789-00
               </Text>
-              <Ionicons name="chevron-down" size={18} color="#777" />
-            </TouchableOpacity>
-            {vm.errors.gender && (
-              <Text style={styles.fieldError}>{vm.errors.gender}</Text>
-            )}
 
-            {/* SENHA */}
-            <Text style={styles.labelMargin}>Senha</Text>
-            <View style={styles.passwordWrapper}>
-              <TextInput
-                style={[
-                  styles.input,
-                  styles.passwordInput,
-                  vm.errors.password && styles.inputError,
-                ]}
-                secureTextEntry={!showPassword}
-                value={vm.password}
-                onChangeText={vm.setPassword}
-                onBlur={() => vm.touch("password")}
-              />
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Ionicons
-                  name={showPassword ? "eye-off" : "eye"}
-                  size={22}
-                  color="#777"
-                />
-              </TouchableOpacity>
-            </View>
-            {vm.errors.password && (
-              <Text style={styles.fieldError}>{vm.errors.password}</Text>
-            )}
+              {vm.errors.cpf && (
+                <Text style={styles.fieldError}>{vm.errors.cpf}</Text>
+              )}
 
-            {/* CONFIRMAR SENHA */}
-            <Text style={styles.labelMargin}>Confirmar senha</Text>
-            <View style={styles.passwordWrapper}>
+              {/* DATA NASCIMENTO */}
               <TextInput
-                style={[
-                  styles.input,
-                  styles.passwordInput,
-                  vm.errors.confirmPassword && styles.inputError,
-                ]}
-                secureTextEntry={!showConfirm}
-                value={vm.confirmPassword}
-                onChangeText={vm.setConfirmPassword}
-                onBlur={() => vm.touch("confirmPassword")}
+                style={[styles.input, vm.errors.birthDate && styles.inputError]}
+                placeholder="dd/mm/aaaa"
+                keyboardType="numeric"
+                value={vm.birthDate}
+                onChangeText={(text) => vm.setBirthDate(maskDate(text))}
+                onBlur={() => vm.touch("birthDate")}
               />
-              <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
-                <Ionicons
-                  name={showConfirm ? "eye-off" : "eye"}
-                  size={22}
-                  color="#777"
-                />
+
+              <Text style={styles.helpText}>
+                Formato: dia/mês/ano. Ex: 25/12/1995
+              </Text>
+
+              {vm.errors.birthDate && (
+                <Text style={styles.fieldError}>{vm.errors.birthDate}</Text>
+              )}
+
+              {/* GÊNERO */}
+              <Text style={styles.labelMargin}>Gênero</Text>
+              <TouchableOpacity
+                style={[styles.select, vm.errors.gender && styles.inputError]}
+                onPress={() => {
+                  vm.toggleGender();
+                  vm.touch("gender");
+                }}
+              >
+                <Text style={styles.selectText}>
+                  {vm.genderLabel || "Selecione"}
+                </Text>
+                <Ionicons name="chevron-down" size={18} color="#777" />
               </TouchableOpacity>
+              {vm.errors.gender && (
+                <Text style={styles.fieldError}>{vm.errors.gender}</Text>
+              )}
+
+              {/* SENHA */}
+              <Text style={styles.labelMargin}>Senha</Text>
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.passwordInput,
+                    vm.errors.password && styles.inputError,
+                  ]}
+                  secureTextEntry={!showPassword}
+                  value={vm.password}
+                  onChangeText={vm.setPassword}
+                  onBlur={() => vm.touch("password")}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  <View style={styles.iconEye}>
+                    <Ionicons
+                      name={showPassword ? "eye-off" : "eye"}
+                      size={22}
+                      color="#777"
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              {vm.errors.password && (
+                <Text style={styles.fieldError}>{vm.errors.password}</Text>
+              )}
+
+              {/* CONFIRMAR SENHA */}
+              <Text style={styles.labelMargin}>Confirmar senha</Text>
+              <View style={styles.passwordWrapper}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.passwordInput,
+                    vm.errors.confirmPassword && styles.inputError,
+                  ]}
+                  secureTextEntry={!showConfirm}
+                  value={vm.confirmPassword}
+                  onChangeText={vm.setConfirmPassword}
+                  onBlur={() => vm.touch("confirmPassword")}
+                />
+                <TouchableOpacity onPress={() => setShowConfirm(!showConfirm)}>
+                  <View style={styles.iconEye}>
+                    <Ionicons
+                      name={showConfirm ? "eye-off" : "eye"}
+                      size={22}
+                      color="#777"
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+              {vm.errors.confirmPassword && (
+                <Text style={styles.fieldError}>
+                  {vm.errors.confirmPassword}
+                </Text>
+              )}
             </View>
-            {vm.errors.confirmPassword && (
-              <Text style={styles.fieldError}>{vm.errors.confirmPassword}</Text>
-            )}
           </ScrollView>
 
           {/* =======================
