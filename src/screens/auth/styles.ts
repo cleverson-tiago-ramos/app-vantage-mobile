@@ -3,14 +3,18 @@ import { spacing } from "@/src/components/theme/spacing";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: {
+  safe: {
     flex: 1,
     backgroundColor: colors.light,
+  },
+
+  container: {
+    flex: 1,
     paddingHorizontal: spacing.screenHorizontal,
-    paddingTop: spacing.screenVertical,
   },
 
   back: {
+    marginTop: spacing.md,
     marginBottom: spacing.lg,
   },
 
@@ -21,7 +25,7 @@ export const styles = StyleSheet.create({
 
   logo: {
     width: "100%",
-    height: 120,
+    height: 140,
     marginVertical: spacing.xl,
   },
 
@@ -35,12 +39,16 @@ export const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
 
+  labelMargin: {
+    marginTop: spacing.lg,
+  },
+
   input: {
     borderWidth: 1,
     borderColor: colors.gray,
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: spacing.md,
     fontSize: 16,
     color: colors.textPrimary,
   },
@@ -50,10 +58,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  passwordInput: {
+    flex: 1,
+  },
+
   eye: {
     fontSize: 18,
     paddingHorizontal: spacing.sm,
-    color: "#666",
+    color: "#777",
   },
 
   forgot: {
@@ -71,22 +83,22 @@ export const styles = StyleSheet.create({
 
   button: {
     backgroundColor: colors.primary,
-    paddingVertical: spacing.md,
-    borderRadius: 6,
-    marginTop: spacing.lg,
+    paddingVertical: spacing.lg,
+    borderRadius: 8,
+    marginTop: spacing.xl,
     alignItems: "center",
   },
 
   buttonText: {
     color: colors.light,
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: "600",
   },
 
   register: {
     marginTop: spacing.lg,
     textAlign: "center",
-    color: "#666",
+    color: "#999",
   },
 
   registerLink: {

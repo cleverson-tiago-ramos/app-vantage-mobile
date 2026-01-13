@@ -1,4 +1,5 @@
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginViewModel } from "./LoginViewModel";
 import { styles } from "./styles";
 
@@ -6,60 +7,60 @@ export function LoginView() {
   const vm = useLoginViewModel();
 
   return (
-    <View style={styles.container}>
-      {/* Top bar */}
-      <TouchableOpacity style={styles.back}>
-        <Text style={styles.backText}>← Voltar</Text>
-      </TouchableOpacity>
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.back}>
+          <Text style={styles.backText}>← Voltar</Text>
+        </TouchableOpacity>
 
-      {/* Logo */}
-      <Image
-        source={require("@/assets/images/logo_padrao.png")}
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      {/* Form */}
-      <View style={styles.form}>
-        <Text style={styles.label}>E-mail</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Digite seu e-mail"
-          placeholderTextColor="#999"
-          value={vm.identifier}
-          onChangeText={vm.setIdentifier}
-          autoCapitalize="none"
+        <Image
+          source={require("@/assets/images/logo_padrao.png")}
+          style={styles.logo}
+          resizeMode="contain"
         />
 
-        <Text style={[styles.label, { marginTop: 16 }]}>Senha</Text>
-        <View style={styles.passwordWrapper}>
+        <View style={styles.form}>
+          <Text style={styles.label}>E-mail</Text>
           <TextInput
-            style={[styles.input, { flex: 1 }]}
-            placeholder="Digite sua senha"
-            placeholderTextColor="#999"
-            secureTextEntry
-            value={vm.password}
-            onChangeText={vm.setPassword}
+            style={styles.input}
+            placeholder="Digite seu e-mail"
+            placeholderTextColor="#aaa"
+            value={vm.identifier}
+            onChangeText={vm.setIdentifier}
+            autoCapitalize="none"
           />
-          <Text style={styles.eye}>👁</Text>
-        </View>
 
-        <TouchableOpacity>
-          <Text style={styles.forgot}>Esqueceu a senha?</Text>
-        </TouchableOpacity>
+          <Text style={[styles.label, styles.labelMargin]}>Senha</Text>
+          <View style={styles.passwordWrapper}>
+            <TextInput
+              style={[styles.input, styles.passwordInput]}
+              placeholder="Digite sua senha"
+              placeholderTextColor="#aaa"
+              secureTextEntry
+              value={vm.password}
+              onChangeText={vm.setPassword}
+            />
+            <Text style={styles.eye}>👁</Text>
+          </View>
 
-        {vm.error && <Text style={styles.error}>{vm.error}</Text>}
+          <TouchableOpacity>
+            <Text style={styles.forgot}>Esqueceu a senha?</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={vm.submit}>
-          <Text style={styles.buttonText}>
-            {vm.loading ? "Entrando..." : "Entrar"}
+          {vm.error && <Text style={styles.error}>{vm.error}</Text>}
+
+          <TouchableOpacity style={styles.button} onPress={vm.submit}>
+            <Text style={styles.buttonText}>
+              {vm.loading ? "Entrando..." : "Entrar"}
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={styles.register}>
+            Primeiro acesso?{" "}
+            <Text style={styles.registerLink}>Cadastre-se</Text>
           </Text>
-        </TouchableOpacity>
-
-        <Text style={styles.register}>
-          Primeiro acesso? <Text style={styles.registerLink}>Cadastre-se</Text>
-        </Text>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
