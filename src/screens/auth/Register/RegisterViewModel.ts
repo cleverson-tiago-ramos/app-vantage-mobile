@@ -32,7 +32,7 @@ export function useRegisterViewModel() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   async function submit() {
     setError(null);
 
@@ -63,6 +63,10 @@ export function useRegisterViewModel() {
       setLoading(false);
     }
   }
+  function touch(field: string) {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  }
+
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const isCpfValid = cpf.replace(/\D/g, "").length === 11;
@@ -75,6 +79,35 @@ export function useRegisterViewModel() {
     gender !== null &&
     password.length >= 6 &&
     password === confirmPassword;
+
+  const errors = {
+    name:
+      touched.name && name.trim().length === 0
+        ? "Informe seu nome completo"
+        : undefined,
+
+    email: touched.email && !isEmailValid ? "E-mail inválido" : undefined,
+
+    cpf: touched.cpf && !isCpfValid ? "CPF inválido" : undefined,
+
+    birthDate:
+      touched.birthDate && birthDate.trim().length !== 10
+        ? "Data inválida"
+        : undefined,
+
+    gender: touched.gender && !gender ? "Selecione um gênero" : undefined,
+
+    password:
+      touched.password && password.length < 6
+        ? "Senha deve ter ao menos 6 caracteres"
+        : undefined,
+
+    confirmPassword:
+      touched.confirmPassword && password !== confirmPassword
+        ? "As senhas não conferem"
+        : undefined,
+  };
+
   return {
     name,
     email,
@@ -85,7 +118,7 @@ export function useRegisterViewModel() {
     password,
     confirmPassword,
     loading,
-    error,
+    errors,
     isFormValid,
     setName,
     setEmail,
@@ -95,5 +128,6 @@ export function useRegisterViewModel() {
     setConfirmPassword,
     toggleGender,
     submit,
+    touch,
   };
 }
