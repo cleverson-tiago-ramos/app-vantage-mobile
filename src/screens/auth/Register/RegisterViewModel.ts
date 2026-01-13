@@ -63,7 +63,18 @@ export function useRegisterViewModel() {
       setLoading(false);
     }
   }
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  const isCpfValid = cpf.replace(/\D/g, "").length === 11;
+
+  const isFormValid =
+    name.trim().length > 0 &&
+    isEmailValid &&
+    isCpfValid &&
+    birthDate.trim().length === 10 &&
+    gender !== null &&
+    password.length >= 6 &&
+    password === confirmPassword;
   return {
     name,
     email,
@@ -75,6 +86,7 @@ export function useRegisterViewModel() {
     confirmPassword,
     loading,
     error,
+    isFormValid,
     setName,
     setEmail,
     setCpf,

@@ -133,9 +133,12 @@ export default function RegisterView() {
 
           <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
             <TouchableOpacity
-              style={[styles.button, vm.loading && styles.buttonDisabled]}
+              style={[
+                styles.button,
+                (!vm.isFormValid || vm.loading) && styles.buttonDisabled,
+              ]}
               onPress={vm.submit}
-              disabled={vm.loading}
+              disabled={!vm.isFormValid || vm.loading}
             >
               {vm.loading ? (
                 <ActivityIndicator color="#fff" />

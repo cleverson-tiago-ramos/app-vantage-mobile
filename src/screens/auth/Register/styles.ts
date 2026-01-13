@@ -45,7 +45,10 @@ export const styles = StyleSheet.create({
     marginTop: spacing.xl,
     alignItems: "center",
   },
-  buttonDisabled: { opacity: 0.7 },
+  buttonDisabled: {
+    opacity: 0.5,
+    backgroundColor: colors.gray,
+  },
   buttonText: { color: "#fff", fontSize: 16, fontWeight: "600" },
 
   error: {
@@ -78,6 +81,7 @@ export const styles = StyleSheet.create({
     paddingTop: spacing.sm,
     backgroundColor: colors.light,
   },
+
   selectText: {
     fontSize: 16,
     color: colors.textPrimary,
