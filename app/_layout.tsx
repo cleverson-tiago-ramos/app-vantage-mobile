@@ -1,4 +1,5 @@
 import { useColorScheme } from "@/hooks/use-color-scheme";
+import { ToastProvider } from "@/src/components/toast/ToastProvider";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
@@ -10,7 +11,7 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <>
+    <ToastProvider>
       <Stack>
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -21,6 +22,6 @@ export default function RootLayout() {
       </Stack>
 
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-    </>
+    </ToastProvider>
   );
 }

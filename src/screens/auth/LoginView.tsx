@@ -1,3 +1,4 @@
+import { colors } from "@/src/components/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -12,7 +13,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useLoginViewModel } from "./LoginViewModel";
 import { styles } from "./styles";
-
 export function LoginView() {
   const vm = useLoginViewModel();
   const router = useRouter();
@@ -31,7 +31,7 @@ export function LoginView() {
             }
           }}
         >
-          <Text style={styles.backText}>← Voltar</Text>
+          <Ionicons name="arrow-back" size={24} color={colors.primary} />
         </TouchableOpacity>
 
         <Image
