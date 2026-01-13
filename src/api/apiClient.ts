@@ -13,15 +13,23 @@ export const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use(async (config) => {
-  const token = await SecureStore.getItemAsync("accessToken");
+apiClient.interceptors.request.use(
+  async (config) => {
+    const token = await SecureStore.getItemAsync("accessToken");
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
 
-  config.headers["X-Client"] = "mobile";
-  config.headers["X-Platform"] = "android";
+    config.headers["X-Client"] = "mobile";
+    config.headers["X-Platform"] = "android";
 
-  return config;
-});
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => Promise.reject(error)
+);

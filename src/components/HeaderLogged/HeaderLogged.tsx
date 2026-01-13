@@ -1,6 +1,7 @@
 // src/components/HeaderLogged/HeaderLogged.tsx
 import { colors } from "@/src/components/theme/colors";
-import { useAuthStore } from "@/src/stores/auth.store";
+
+import { useAuthStore } from "@/src/user/auth.store";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export function HeaderLogged() {

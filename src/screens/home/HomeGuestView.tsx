@@ -1,12 +1,12 @@
 // src/screens/home/HomeGuestView.tsx
 import { HeaderGuest } from "@/src/components/HeaderGuest/HeaderGuest";
-import { Text, View } from "react-native";
-
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 export function HomeGuestView() {
   return (
-    <View>
+    <SafeAreaView style={{ flex: 1 }}>
       <HeaderGuest />
       <Text>Conteúdo para visitante</Text>
-    </View>
+    </SafeAreaView>
   );
 }

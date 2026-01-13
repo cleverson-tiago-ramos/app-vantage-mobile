@@ -15,6 +15,7 @@
     },
 
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
@@ -38,6 +39,10 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+
+    "extra": {
+      "API_URL": "https://vantageapp.com.br/api"
     }
   }
 }

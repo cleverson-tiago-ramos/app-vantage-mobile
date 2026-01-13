@@ -1,6 +1,6 @@
 // src/screens/auth/LoginViewModel.ts
 import { loginService } from "@/src/services/auth.service";
-import { useAuthStore } from "@/src/stores/auth.store";
+import { useAuthStore } from "@/src/user/auth.store";
 import { useState } from "react";
 
 export function useLoginViewModel() {

@@ -1,7 +1,8 @@
-// src/components/HeaderGuest.tsx
-import { colors } from "@/src/components/theme/colors";
+// src/components/HeaderGuest/HeaderGuest.tsx
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
+
+import { styles } from "./styles";
 
 export function HeaderGuest() {
   const router = useRouter();
@@ -18,21 +19,3 @@ export function HeaderGuest() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: colors.dark,
-  },
-  title: {
-    color: colors.light,
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 8,
-  },
-  link: {
-    color: colors.primaryHover,
-    fontSize: 14,
-    fontWeight: "500",
-  },
-});

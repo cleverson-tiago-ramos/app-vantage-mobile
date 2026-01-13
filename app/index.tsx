@@ -1,5 +1,5 @@
 //app/index.tsx
-import { useAuthStore } from "@/src/stores/auth.store";
+import { useAuthStore } from "@/src/user/auth.store";
 import { Redirect } from "expo-router";
 import { ActivityIndicator, Image, View } from "react-native";
 

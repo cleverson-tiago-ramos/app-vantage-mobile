@@ -2,6 +2,7 @@
 import { HomeGuestView } from "./HomeGuestView";
 import { HomeLoggedView } from "./HomeLoggedView";
 import { useHomeViewModel } from "./HomeViewModel";
+
 export default function HomeScreen() {
   const { isLogged } = useHomeViewModel();
 
