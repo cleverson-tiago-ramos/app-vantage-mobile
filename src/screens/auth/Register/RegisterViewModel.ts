@@ -1,11 +1,16 @@
-import { createUser } from "@/src/services/auth.service";
+// src/screens/auth/Register/RegisterViewModel.ts
+import { useCreateUser } from "@/src/hooks/user/register/useCreateUser";
 import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export function useRegisterViewModel() {
   const router = useRouter();
+  const { execute } = useCreateUser();
 
+  /* ======================
+   * STATE
+   * ====================== */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [cpf, setCpf] = useState("");
@@ -19,6 +24,9 @@ export function useRegisterViewModel() {
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  /* ======================
+   * UX HELPERS
+   * ====================== */
   function touch(field: string) {
     setTouched((prev) => ({ ...prev, [field]: true }));
   }
@@ -39,6 +47,9 @@ export function useRegisterViewModel() {
       ? "Outro"
       : "";
 
+  /* ======================
+   * VALIDATIONS
+   * ====================== */
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const isCpfValid = isValidCPF(cpf);
 
@@ -61,41 +72,64 @@ export function useRegisterViewModel() {
     isPasswordStrong &&
     password === confirmPassword;
 
+  /* ======================
+   * FIELD ERRORS
+   * ====================== */
   const errors = {
     name: touched.name && !name ? "Informe seu nome completo" : undefined,
+
     email: touched.email && !isEmailValid ? "E-mail inválido" : undefined,
+
     cpf: touched.cpf && !isCpfValid ? "CPF inválido" : undefined,
+
     birthDate:
       touched.birthDate && birthDate.length !== 10
         ? "Data inválida"
         : undefined,
+
     gender: touched.gender && !gender ? "Selecione um gênero" : undefined,
+
     password:
       touched.password && !isPasswordStrong
         ? "Senha fraca. Use letras, número e símbolo."
         : undefined,
+
     confirmPassword:
       touched.confirmPassword && password !== confirmPassword
         ? "As senhas não conferem"
         : undefined,
   };
 
+  /* ======================
+   * SUBMIT
+   * ====================== */
   async function submit() {
     if (!isFormValid) return;
 
-    setLoading(true);
-    await createUser({
-      name,
-      email,
-      cpf,
-      password,
-    });
+    try {
+      setLoading(true);
 
-    setLoading(false);
-    router.replace("/(auth)/login");
+      await execute({
+        name,
+        email,
+        cpf,
+        password,
+        birthDate,
+        gender: gender!, // seguro aqui
+      });
+
+      // 🔜 aqui entra login automático ou toast
+      router.replace("/(auth)/login");
+    } finally {
+      setLoading(false);
+    }
   }
 
+  /* ======================
+   * PUBLIC API
+   * ====================== */
   return {
+    // values
     name,
     email,
     cpf,
@@ -104,15 +138,21 @@ export function useRegisterViewModel() {
     genderLabel,
     password,
     confirmPassword,
+
+    // status
     loading,
     errors,
     isFormValid,
+
+    // setters
     setName,
     setEmail,
     setCpf,
     setBirthDate,
     setPassword,
     setConfirmPassword,
+
+    // actions
     toggleGender,
     submit,
     touch,

@@ -62,7 +62,9 @@ export default function RegisterView() {
           >
             <View style={styles.content}>
               {/* NOME */}
-              <Text style={styles.label}>Nome completo</Text>
+              <Text style={styles.label}>
+                Nome completo<Text style={styles.fieldError}>*</Text>
+              </Text>
               <TextInput
                 style={[styles.input, vm.errors.name && styles.inputError]}
                 value={vm.name}
@@ -74,7 +76,9 @@ export default function RegisterView() {
               )}
 
               {/* EMAIL */}
-              <Text style={styles.labelMargin}>E-mail</Text>
+              <Text style={styles.labelMargin}>
+                E-mail<Text style={styles.fieldError}>*</Text>
+              </Text>
               <TextInput
                 style={[styles.input, vm.errors.email && styles.inputError]}
                 autoCapitalize="none"
@@ -87,7 +91,9 @@ export default function RegisterView() {
               )}
 
               {/* CPF */}
-              <Text style={styles.labelMargin}>CPF</Text>
+              <Text style={styles.labelMargin}>
+                CPF<Text style={styles.fieldError}>*</Text>
+              </Text>
               <TextInput
                 style={[styles.input, vm.errors.cpf && styles.inputError]}
                 keyboardType="numeric"
@@ -104,7 +110,9 @@ export default function RegisterView() {
               {vm.errors.cpf && (
                 <Text style={styles.fieldError}>{vm.errors.cpf}</Text>
               )}
-
+              <Text style={styles.label}>
+                Data de nascimento<Text style={styles.fieldError}>*</Text>
+              </Text>
               {/* DATA NASCIMENTO */}
               <TextInput
                 style={[styles.input, vm.errors.birthDate && styles.inputError]}
@@ -142,7 +150,9 @@ export default function RegisterView() {
               )}
 
               {/* SENHA */}
-              <Text style={styles.labelMargin}>Senha</Text>
+              <Text style={styles.labelMargin}>
+                Senha<Text style={styles.fieldError}>*</Text>
+              </Text>
               <View style={styles.passwordWrapper}>
                 <TextInput
                   style={[
@@ -172,7 +182,9 @@ export default function RegisterView() {
               )}
 
               {/* CONFIRMAR SENHA */}
-              <Text style={styles.labelMargin}>Confirmar senha</Text>
+              <Text style={styles.labelMargin}>
+                Confirmar senha<Text style={styles.fieldError}>*</Text>
+              </Text>
               <View style={styles.passwordWrapper}>
                 <TextInput
                   style={[
