@@ -125,7 +125,10 @@ export const styles = StyleSheet.create({
     marginTop: spacing.sm,
     textAlign: "center",
   },
-
+  required: {
+    color: colors.error,
+    fontSize: 16,
+  },
   /* =========================
    * FOOTER FIXO
    * ========================= */
@@ -176,5 +179,78 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     padding: spacing.md,
     gap: spacing.xs,
+  },
+  genderContainer: {
+    flexDirection: "row",
+    gap: spacing.sm,
+    marginTop: spacing.xs,
+  },
+
+  genderOption: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.gray,
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
+    gap: 6,
+    backgroundColor: colors.light,
+  },
+
+  genderOptionSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+
+  genderText: {
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+
+  genderTextSelected: {
+    color: "#fff",
+    fontWeight: "600",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+
+  modalContent: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+
+  modalTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 16,
+  },
+
+  modalOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+
+  modalOptionActive: {
+    backgroundColor: "#f5f7ff",
+  },
+
+  modalOptionText: {
+    fontSize: 15,
+    color: "#444",
+  },
+
+  modalOptionTextActive: {
+    color: colors.primary,
+    fontWeight: "600",
   },
 });

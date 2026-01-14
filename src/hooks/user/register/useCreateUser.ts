@@ -1,5 +1,5 @@
 import { createUser } from "@/src/services/user/CreateUser";
-import axios from "axios";
+import { isAxiosError } from "axios";
 
 export interface CreateUserInput {
   name: string;
@@ -8,6 +8,10 @@ export interface CreateUserInput {
   password: string;
   birthDate: string;
   gender: "male" | "female" | "other";
+}
+
+function normalizeCPF(cpf: string) {
+  return cpf.replace(/\D/g, "");
 }
 
 export class CreateUserError extends Error {
@@ -22,24 +26,23 @@ export function useCreateUser() {
       return await createUser({
         name: input.name,
         email: input.email,
-        cpf: input.cpf,
+        cpf: normalizeCPF(input.cpf),
         password: input.password,
         birth_date: input.birthDate,
         gender: input.gender,
       });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
+      if (isAxiosError(error)) {
         const status = error.response?.status;
+        const message =
+          (error.response?.data as any)?.message || "Erro ao criar conta";
 
         if (status === 409) {
-          throw new CreateUserError("CPF ou e-mail já cadastrado", 409);
+          throw new CreateUserError(message, 409);
         }
 
         if (status === 422) {
-          throw new CreateUserError(
-            "Dados inválidos. Verifique os campos.",
-            422
-          );
+          throw new CreateUserError(message, 422);
         }
 
         if (status && status >= 500) {

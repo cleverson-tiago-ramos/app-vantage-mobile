@@ -19,6 +19,7 @@ import {
 } from "react-native-safe-area-context";
 
 import { maskCPF, maskDate } from "@/src/utils/masks";
+import { GenderSelectModal } from "./GenderSelectModal";
 import { useRegisterViewModel } from "./RegisterViewModel";
 import { styles } from "./styles";
 
@@ -29,7 +30,7 @@ export default function RegisterView() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
+  const [genderModalVisible, setGenderModalVisible] = useState(false);
   return (
     <SafeAreaView style={styles.safe} edges={["top"]}>
       <KeyboardAvoidingView
@@ -131,23 +132,39 @@ export default function RegisterView() {
                 <Text style={styles.fieldError}>{vm.errors.birthDate}</Text>
               )}
 
-              {/* GÊNERO */}
-              <Text style={styles.labelMargin}>Gênero</Text>
+              <Text style={styles.labelMargin}>
+                Gênero<Text style={styles.fieldError}>*</Text>
+              </Text>
+
               <TouchableOpacity
                 style={[styles.select, vm.errors.gender && styles.inputError]}
-                onPress={() => {
-                  vm.toggleGender();
-                  vm.touch("gender");
-                }}
+                activeOpacity={0.7}
+                onPress={() => setGenderModalVisible(true)}
               >
-                <Text style={styles.selectText}>
+                <Text
+                  style={[
+                    styles.selectText,
+                    !vm.gender && { color: "#999" }, // placeholder visual
+                  ]}
+                >
                   {vm.genderLabel || "Selecione"}
                 </Text>
                 <Ionicons name="chevron-down" size={18} color="#777" />
               </TouchableOpacity>
+
               {vm.errors.gender && (
                 <Text style={styles.fieldError}>{vm.errors.gender}</Text>
               )}
+
+              <GenderSelectModal
+                visible={genderModalVisible}
+                selected={vm.gender}
+                onClose={() => setGenderModalVisible(false)}
+                onSelect={(value) => {
+                  vm.setGender(value);
+                  vm.touch("gender");
+                }}
+              />
 
               {/* SENHA */}
               <Text style={styles.labelMargin}>

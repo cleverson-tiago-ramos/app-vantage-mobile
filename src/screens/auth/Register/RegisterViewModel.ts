@@ -1,5 +1,9 @@
 // src/screens/auth/Register/RegisterViewModel.ts
-import { useCreateUser } from "@/src/hooks/user/register/useCreateUser";
+import { useToast } from "@/src/components/toast/ToastProvider";
+import {
+  CreateUserError,
+  useCreateUser,
+} from "@/src/hooks/user/register/useCreateUser";
 import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -7,7 +11,7 @@ import { useState } from "react";
 export function useRegisterViewModel() {
   const router = useRouter();
   const { execute } = useCreateUser();
-
+  const { showToast } = useToast();
   /* ======================
    * STATE
    * ====================== */
@@ -29,13 +33,6 @@ export function useRegisterViewModel() {
    * ====================== */
   function touch(field: string) {
     setTouched((prev) => ({ ...prev, [field]: true }));
-  }
-
-  function toggleGender() {
-    if (!gender) setGender("male");
-    else if (gender === "male") setGender("female");
-    else if (gender === "female") setGender("other");
-    else setGender(null);
   }
 
   const genderLabel =
@@ -115,11 +112,17 @@ export function useRegisterViewModel() {
         cpf,
         password,
         birthDate,
-        gender: gender!, // seguro aqui
+        gender: gender!,
       });
 
-      // 🔜 aqui entra login automático ou toast
+      showToast("Cadastro realizado com sucesso", "success");
       router.replace("/(auth)/login");
+    } catch (error) {
+      if (error instanceof CreateUserError) {
+        showToast(error.message, "error");
+      } else {
+        showToast("Erro inesperado ao criar conta", "error");
+      }
     } finally {
       setLoading(false);
     }
@@ -149,11 +152,11 @@ export function useRegisterViewModel() {
     setEmail,
     setCpf,
     setBirthDate,
+    setGender, // ✅ AQUI
     setPassword,
     setConfirmPassword,
 
     // actions
-    toggleGender,
     submit,
     touch,
   };
