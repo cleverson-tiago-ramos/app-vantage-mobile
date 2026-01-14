@@ -4,10 +4,10 @@ import {
   CreateUserError,
   useCreateUser,
 } from "@/src/hooks/user/register/useCreateUser";
+import { useAuthStore } from "@/src/store/auth.store";
 import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-
 export function useRegisterViewModel() {
   const router = useRouter();
   const { execute } = useCreateUser();
@@ -27,7 +27,7 @@ export function useRegisterViewModel() {
 
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-
+  const { setSession } = useAuthStore();
   /* ======================
    * UX HELPERS
    * ====================== */
@@ -101,12 +101,27 @@ export function useRegisterViewModel() {
    * SUBMIT
    * ====================== */
   async function submit() {
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      // força exibição dos erros
+      setTouched({
+        name: true,
+        email: true,
+        cpf: true,
+        birthDate: true,
+        gender: true,
+        password: true,
+        confirmPassword: true,
+      });
+
+      showToast("Preencha todos os campos obrigatórios corretamente", "error");
+
+      return;
+    }
 
     try {
       setLoading(true);
 
-      await execute({
+      const response = await execute({
         name,
         email,
         cpf,
@@ -115,8 +130,10 @@ export function useRegisterViewModel() {
         gender: gender!,
       });
 
-      showToast("Cadastro realizado com sucesso", "success");
-      router.replace("/(auth)/login");
+      setSession(response.user, response.tokens);
+
+      showToast("Conta criada com sucesso", "success");
+      router.replace("/(tabs)");
     } catch (error) {
       if (error instanceof CreateUserError) {
         showToast(error.message, "error");
