@@ -1,8 +1,7 @@
 // src/api/apiClient.ts
+import { useAuthStore } from "@/src/store/auth.store";
 import axios from "axios";
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
-
 const API_URL = Constants.expoConfig?.extra?.API_URL;
 
 export const apiClient = axios.create({
@@ -13,21 +12,18 @@ export const apiClient = axios.create({
   },
 });
 
-apiClient.interceptors.request.use(
-  async (config) => {
-    const token = await SecureStore.getItemAsync("accessToken");
+apiClient.interceptors.request.use((config) => {
+  const { accessToken } = useAuthStore.getState();
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`;
+  }
 
-    config.headers["X-Client"] = "mobile";
-    config.headers["X-Platform"] = "android";
+  config.headers["X-Client"] = "mobile";
+  config.headers["X-Platform"] = "android";
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  return config;
+});
 
 apiClient.interceptors.response.use(
   (response) => response,

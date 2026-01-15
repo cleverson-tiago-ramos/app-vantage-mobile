@@ -7,13 +7,16 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
 
+  // login
   setSession: (
     user: User,
     accessToken: string,
     refreshToken: string
   ) => Promise<void>;
 
-  updateAccessToken: (token: string) => Promise<void>;
+  // refresh
+  updateTokens: (accessToken: string, refreshToken: string) => Promise<void>;
+
   restoreSession: () => Promise<void>;
   clearSession: () => Promise<void>;
 }
@@ -23,23 +26,29 @@ export const useAuthStore = create<AuthState>((set) => ({
   accessToken: null,
   refreshToken: null,
 
-  // src/store/auth.store.ts
+  // LOGIN
   setSession: async (user, accessToken, refreshToken) => {
-    console.log("[AUTH] setSession → salvando tokens");
-    console.log("[AUTH] accessToken:", accessToken);
-    console.log("[AUTH] refreshToken:", refreshToken);
+    console.log("[AUTH] setSession → salvando sessão completa");
 
     await SecureStore.setItemAsync("accessToken", accessToken);
     await SecureStore.setItemAsync("refreshToken", refreshToken);
+    await SecureStore.setItemAsync("user", JSON.stringify(user));
 
     set({ user, accessToken, refreshToken });
 
     console.log("[AUTH] setSession → estado atualizado");
   },
 
-  updateAccessToken: async (token) => {
-    await SecureStore.setItemAsync("accessToken", token);
-    set({ accessToken: token });
+  // REFRESH
+  updateTokens: async (accessToken, refreshToken) => {
+    console.log("[AUTH] updateTokens → atualizando tokens");
+
+    await SecureStore.setItemAsync("accessToken", accessToken);
+    await SecureStore.setItemAsync("refreshToken", refreshToken);
+
+    set({ accessToken, refreshToken });
+
+    console.log("[AUTH] updateTokens → tokens atualizados");
   },
 
   restoreSession: async () => {
@@ -47,21 +56,21 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     const accessToken = await SecureStore.getItemAsync("accessToken");
     const refreshToken = await SecureStore.getItemAsync("refreshToken");
+    const userRaw = await SecureStore.getItemAsync("user");
 
-    console.log("[AUTH] restoreSession → accessToken:", accessToken);
-    console.log("[AUTH] restoreSession → refreshToken:", refreshToken);
+    const user = userRaw ? JSON.parse(userRaw) : null;
 
-    set({
-      accessToken,
-      refreshToken,
-    });
+    set({ user, accessToken, refreshToken });
 
     console.log("[AUTH] restoreSession → estado restaurado");
   },
 
   clearSession: async () => {
+    console.log("[AUTH] clearSession → limpando");
+
     await SecureStore.deleteItemAsync("accessToken");
     await SecureStore.deleteItemAsync("refreshToken");
+    await SecureStore.deleteItemAsync("user");
 
     set({
       user: null,
