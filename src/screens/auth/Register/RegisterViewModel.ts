@@ -130,7 +130,11 @@ export function useRegisterViewModel() {
         gender: gender!,
       });
 
-      setSession(response.user, response.tokens);
+      setSession(
+        response.user,
+        response.tokens.accessToken,
+        response.tokens.refreshToken
+      );
 
       showToast("Conta criada com sucesso", "success");
       router.replace("/(tabs)");

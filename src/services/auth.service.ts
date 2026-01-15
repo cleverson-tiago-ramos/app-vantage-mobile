@@ -1,10 +1,10 @@
 import { apiClient } from "@/src/api/apiClient";
-import { User } from "@/src/domain/models/users/User";
+import { AuthResponseDTO } from "@/src/application/dtos/auth/AuthResponseDTO";
 
 export async function loginService(
   identifier: string,
   password: string
-): Promise<{ user: User; tokens: { accessToken: string } }> {
+): Promise<AuthResponseDTO> {
   const { data } = await apiClient.post("/mobile/v1/auth/login", {
     identifier,
     password,
