@@ -13,21 +13,23 @@ export function AuthBootstrap() {
     async function bootstrap() {
       const store = useAuthStore.getState();
 
-      await store.restoreSession();
-
-      const { accessToken } = useAuthStore.getState();
-
-      if (!accessToken) {
-        router.replace("/(auth)/login");
-        return;
-      }
-
       try {
+        await store.restoreSession();
+
+        const { accessToken } = useAuthStore.getState();
+
+        if (!accessToken) {
+          router.replace("/(auth)/login");
+          return;
+        }
+
         await apiClient.get("/mobile/v1/auth/me");
-        if (!cancelled) router.replace("/(tabs)");
+        router.replace("/(tabs)");
       } catch {
         await store.clearSession();
-        if (!cancelled) router.replace("/(auth)/login");
+        router.replace("/(auth)/login");
+      } finally {
+        store.finishBootstrap();
       }
     }
 
