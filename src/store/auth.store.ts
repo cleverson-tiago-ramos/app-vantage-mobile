@@ -8,7 +8,11 @@ interface AuthState {
   refreshToken: string | null;
 
   isBootstrapping: boolean;
+  isBiometricChecking: boolean;
+  isBiometricVerified: boolean;
+  requireBiometric: boolean;
 
+  // sessão
   setSession: (
     user: User,
     accessToken: string,
@@ -18,7 +22,14 @@ interface AuthState {
   updateTokens: (accessToken: string, refreshToken: string) => Promise<void>;
   restoreSession: () => Promise<void>;
   clearSession: () => Promise<void>;
+
+  // bootstrap
   finishBootstrap: () => void;
+
+  // biometria
+  startBiometricCheck: () => void;
+  verifyBiometric: () => void;
+  failBiometric: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -27,6 +38,9 @@ export const useAuthStore = create<AuthState>((set) => ({
   refreshToken: null,
 
   isBootstrapping: true,
+  isBiometricChecking: false,
+  isBiometricVerified: false,
+  requireBiometric: true,
 
   setSession: async (user, accessToken, refreshToken) => {
     await SecureStore.setItemAsync("accessToken", accessToken);
@@ -66,6 +80,17 @@ export const useAuthStore = create<AuthState>((set) => ({
       refreshToken: null,
     });
   },
-
+  startBiometricCheck: () =>
+    set({ isBiometricChecking: true, isBiometricVerified: false }),
+  verifyBiometric: () =>
+    set({ isBiometricChecking: false, isBiometricVerified: true }),
+  failBiometric: () =>
+    set({
+      isBiometricChecking: false,
+      isBiometricVerified: false,
+      accessToken: null,
+      refreshToken: null,
+      user: null,
+    }),
   finishBootstrap: () => set({ isBootstrapping: false }),
 }));
