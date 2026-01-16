@@ -17,7 +17,6 @@ export function useForgotPassword() {
         identifier,
       });
 
-      // backend sempre responde ok (mesmo se não existir)
       setSuccess(true);
     } catch (err: any) {
       setError(

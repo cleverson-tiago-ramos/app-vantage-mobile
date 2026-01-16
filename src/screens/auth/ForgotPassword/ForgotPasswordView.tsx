@@ -12,25 +12,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { ConfirmDialog } from "@/src/components/ui/ConfirmDialog/ConfirmDialog";
-import { useConfirmDialog } from "@/src/hooks/ui/useConfirmDialog";
-
-import { useEffect } from "react";
+import * as Haptics from "expo-haptics";
 import { useForgotPasswordViewModel } from "./ForgotPasswordViewModel";
 import { styles } from "./styles";
 
 export function ForgotPasswordView() {
   const vm = useForgotPasswordViewModel();
   const router = useRouter();
-  const dialog = useConfirmDialog();
-
-  /* =====================================================
-     ABRE DIALOG QUANDO SUCESSO
-  ===================================================== */
-  useEffect(() => {
-    if (vm.success) {
-      dialog.open();
-    }
-  }, [vm.success, dialog]);
 
   return (
     <>
@@ -67,10 +55,8 @@ export function ForgotPasswordView() {
               editable={!vm.loading}
             />
 
-            {/* ❌ ERRO */}
             {vm.error && <Text style={styles.error}>{vm.error}</Text>}
 
-            {/* 🔘 BOTÃO */}
             <TouchableOpacity
               style={[styles.button, vm.loading && styles.buttonDisabled]}
               onPress={vm.submit}
@@ -83,7 +69,6 @@ export function ForgotPasswordView() {
               )}
             </TouchableOpacity>
 
-            {/* 🔗 Voltar */}
             <Text
               style={styles.register}
               onPress={() => router.replace("/(auth)/login")}
@@ -94,19 +79,19 @@ export function ForgotPasswordView() {
         </View>
       </SafeAreaView>
 
-      {/* ============================
-          CONFIRM DIALOG
-      ============================ */}
+      {/* ✅ CONFIRM DIALOG CONTROLADO PELO VM */}
       <ConfirmDialog
-        visible={dialog.visible}
+        visible={vm.dialog.visible}
         title="Recuperação de senha"
         message="Se os dados estiverem corretos, enviaremos as instruções por e-mail."
         confirmText="OK"
         cancelText="Cancelar"
-        loading={dialog.loading}
-        onCancel={dialog.close}
+        loading={vm.dialog.loading}
+        onCancel={vm.dialog.close}
         onConfirm={() =>
-          dialog.confirm(async () => {
+          vm.dialog.confirm(async () => {
+            await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            vm.dialog.close();
             router.replace("/(auth)/login");
           })
         }
