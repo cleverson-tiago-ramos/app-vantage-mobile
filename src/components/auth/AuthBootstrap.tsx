@@ -12,13 +12,15 @@ export function AuthBootstrap() {
         await store.restoreSession();
 
         const { accessToken } = useAuthStore.getState();
-        if (!accessToken) return;
 
-        await apiClient.get("/mobile/v1/auth/me");
+        // 👇 Se não tem token, apenas não valida /me
+        if (accessToken) {
+          await apiClient.get("/mobile/v1/auth/me");
+        }
       } catch {
         await store.clearSession();
       } finally {
-        store.finishBootstrap();
+        store.finishBootstrap(); // 🔥 agora SEMPRE executa
       }
     }
 

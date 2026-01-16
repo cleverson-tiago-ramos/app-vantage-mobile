@@ -31,11 +31,8 @@ let failedQueue: {
 
 function processQueue(error: any, token: string | null = null) {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve(token);
-    }
+    if (error) prom.reject(error);
+    else prom.resolve(token);
   });
   failedQueue = [];
 }
@@ -46,22 +43,17 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
     const status = error?.response?.status;
 
-    // ============================
-    // 401 → tentativa de refresh
-    // ============================
     if (status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       const store = useAuthStore.getState();
       const { refreshToken } = store;
 
-      // ❌ Sem refreshToken → logout direto
       if (!refreshToken) {
         await store.clearSession();
         return Promise.reject(error);
       }
 
-      // ⏳ Já existe refresh em andamento
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -71,19 +63,21 @@ apiClient.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const refreshResponse = await apiClient.post(
-          "/mobile/v1/auth/refresh",
+        // 🚨 axios puro para evitar loop
+        const refreshResponse = await axios.post(
+          `${ENV.API_URL}/mobile/v1/auth/refresh`,
           { refreshToken }
         );
 
-        const newAccessToken = refreshResponse?.data?.tokens?.accessToken;
+        const newAccessToken = refreshResponse.data?.tokens?.accessToken;
+        const newRefreshToken =
+          refreshResponse.data?.tokens?.refreshToken ?? refreshToken;
 
         if (!newAccessToken) {
           throw new Error("Refresh não retornou accessToken");
         }
 
-        await store.updateTokens(newAccessToken, refreshToken);
-
+        await store.updateTokens(newAccessToken, newRefreshToken);
         processQueue(null, newAccessToken);
 
         return apiClient(originalRequest);

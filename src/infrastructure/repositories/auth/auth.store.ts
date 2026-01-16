@@ -109,15 +109,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   failBiometric: async () => {
-    await SecureStore.deleteItemAsync("accessToken");
-    await SecureStore.deleteItemAsync("refreshToken");
-    await SecureStore.deleteItemAsync("user");
-    await SecureStore.deleteItemAsync("biometricVerifiedAt");
-
     set({
-      user: null,
-      accessToken: null,
-      refreshToken: null,
       isBiometricChecking: false,
       isBiometricVerified: false,
     });
