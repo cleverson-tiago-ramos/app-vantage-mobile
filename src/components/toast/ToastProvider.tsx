@@ -2,7 +2,7 @@ import { colors } from "@/src/components/theme/colors";
 import React, { createContext, useContext, useState } from "react";
 import { Animated, Text } from "react-native";
 import { styles } from "./styles";
-type ToastType = "success" | "error";
+type ToastType = "success" | "error" | "warning" | "info";
 
 interface Toast {
   message: string;

@@ -1,3 +1,4 @@
+// src/components/ui/buttons/LogoutButton/LogoutButton.tsx
 import { useLogout } from "@/src/hooks/auth/useLogout";
 import { Text, TouchableOpacity } from "react-native";
 

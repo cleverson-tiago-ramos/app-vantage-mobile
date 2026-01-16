@@ -1,16 +1,16 @@
 //src/hooks/auth/useLogout.ts
-import { useAuthStore } from "@/src/store/auth.store";
+import { useToast } from "@/src/components/toast/ToastProvider";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { useRouter } from "expo-router";
 
 export function useLogout() {
   const router = useRouter();
   const clearSession = useAuthStore((s) => s.clearSession);
-
+  const { showToast } = useToast();
   async function logout() {
     await clearSession();
 
-    // Reseta a navegação (não permite voltar)
-    router.replace("/(auth)/login");
+    showToast("Você saiu da sua conta", "info");
   }
 
   return { logout };
