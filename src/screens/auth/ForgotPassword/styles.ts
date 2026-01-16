@@ -115,11 +115,12 @@ export const styles = StyleSheet.create({
 
   button: {
     height: 48,
-    backgroundColor: colors.primary,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 20,
+    backgroundColor: colors.success,
+    paddingVertical: spacing.lg,
+    marginTop: spacing.xl,
   },
 
   buttonDisabled: {

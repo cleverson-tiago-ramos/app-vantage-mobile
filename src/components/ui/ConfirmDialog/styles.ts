@@ -43,7 +43,7 @@ export const styles = StyleSheet.create({
   confirmButton: {
     paddingVertical: 10,
     paddingHorizontal: 16,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.success,
     borderRadius: 8,
   },
   destructiveButton: {
