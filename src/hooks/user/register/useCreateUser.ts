@@ -1,4 +1,4 @@
-import { createUser } from "@/src/services/user/CreateUser";
+import { UserRepository } from "@/src/infrastructure/repositories/users/UserRepository";
 import { isAxiosError } from "axios";
 
 export interface CreateUserInput {
@@ -23,7 +23,7 @@ export class CreateUserError extends Error {
 export function useCreateUser() {
   async function execute(input: CreateUserInput) {
     try {
-      return await createUser({
+      return await new UserRepository().execute({
         name: input.name,
         email: input.email,
         cpf: normalizeCPF(input.cpf),
