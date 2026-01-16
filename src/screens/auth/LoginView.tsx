@@ -78,7 +78,9 @@ export function LoginView() {
             </TouchableOpacity>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/forgot-password")}
+          >
             <Text style={styles.forgot}>Esqueceu a senha?</Text>
           </TouchableOpacity>
 
