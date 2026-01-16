@@ -10,7 +10,10 @@ export const colors = {
   successHover: "#458936",
   warning: "#ed6c02",
   error: "#d32f2f",
-  info: "#0288d1",
+  info: "#e5e7eb",
   textPrimary: "#2c2c2b",
   textSecondary: "#6c6c6c",
+  danger: "#e83026",
+  background: "#ffffff",
+  text: "#131312",
 };
