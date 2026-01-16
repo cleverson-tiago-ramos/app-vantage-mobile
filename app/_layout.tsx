@@ -8,7 +8,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 
-// 🔒 Segura splash até liberar manualmente
+// 🔒 Splash controlado manualmente
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -17,7 +17,7 @@ export default function RootLayout() {
   const isBootstrapping = useAuthStore((s) => s.isBootstrapping);
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  // 🔓 Libera splash somente depois do bootstrap
+  // 🔓 Libera splash quando bootstrap termina
   useEffect(() => {
     if (!isBootstrapping) {
       SplashScreen.hideAsync();
@@ -26,10 +26,10 @@ export default function RootLayout() {
 
   return (
     <ToastProvider>
-      {/* SEMPRE EXECUTA */}
+      {/* SEMPRE executa */}
       <AuthBootstrap />
 
-      {/* 🔑 STACK CONDICIONAL */}
+      {/* 🔑 Navegação baseada em estado */}
       {!isBootstrapping &&
         (accessToken ? (
           <Stack>
