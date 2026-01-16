@@ -4,7 +4,7 @@ import {
   CreateUserError,
   useCreateUser,
 } from "@/src/hooks/user/register/useCreateUser";
-import { useAuthStore } from "@/src/store/auth.store";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";

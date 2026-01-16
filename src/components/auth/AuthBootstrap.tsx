@@ -1,6 +1,6 @@
 // src/components/auth/AuthBootstrap.tsx
 import { apiClient } from "@/src/api/apiClient";
-import { useAuthStore } from "@/src/store/auth.store";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { useEffect } from "react";
 
 export function AuthBootstrap() {

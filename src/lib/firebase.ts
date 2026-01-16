@@ -13,5 +13,5 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// 🔐 Firebase Auth (somente identidade)
+// Firebase Auth apenas para login
 export const auth = getAuth(app);

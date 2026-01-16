@@ -1,7 +1,7 @@
 import { useToast } from "@/src/components/toast/ToastProvider";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { auth } from "@/src/lib/firebase";
 import { loginService } from "@/src/services/auth.service";
-import { useAuthStore } from "@/src/store/auth.store";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 

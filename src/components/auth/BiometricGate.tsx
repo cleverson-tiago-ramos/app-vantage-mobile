@@ -1,6 +1,6 @@
 // src/components/auth/BiometricGate.tsx
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { authenticateWithBiometrics } from "@/src/lib/biometric";
-import { useAuthStore } from "@/src/store/auth.store";
 import { useEffect } from "react";
 
 export function BiometricGate() {

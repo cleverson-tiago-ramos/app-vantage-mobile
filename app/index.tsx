@@ -1,4 +1,5 @@
-import { useAuthStore } from "@/src/store/auth.store";
+//app/index.tsx
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { Redirect } from "expo-router";
 
 /**

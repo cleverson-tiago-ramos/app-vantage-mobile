@@ -1,6 +1,6 @@
 // src/api/apiClient.ts
 import { ENV } from "@/src/config/env";
-import { useAuthStore } from "@/src/store/auth.store";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import axios from "axios";
 
 export const apiClient = axios.create({

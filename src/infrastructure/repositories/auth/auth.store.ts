@@ -1,36 +1,9 @@
 import { BIOMETRIC_TTL_MS } from "@/src/config/security";
-import { User } from "@/src/domain/models/users/User";
+import { AuthStore } from "@/src/domain/auth/AuthStore";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 
-interface AuthState {
-  user: User | null;
-  accessToken: string | null;
-  refreshToken: string | null;
-
-  isBootstrapping: boolean;
-  isBiometricChecking: boolean;
-  isBiometricVerified: boolean;
-  requireBiometric: boolean;
-
-  setSession: (
-    user: User,
-    accessToken: string,
-    refreshToken: string
-  ) => Promise<void>;
-
-  updateTokens: (accessToken: string, refreshToken: string) => Promise<void>;
-  restoreSession: () => Promise<void>;
-  clearSession: () => Promise<void>;
-
-  finishBootstrap: () => void;
-
-  startBiometricCheck: () => void;
-  verifyBiometric: () => Promise<void>;
-  failBiometric: () => Promise<void>;
-}
-
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthStore>((set) => ({
   user: null,
   accessToken: null,
   refreshToken: null,
@@ -48,7 +21,6 @@ export const useAuthStore = create<AuthState>((set) => ({
     await SecureStore.setItemAsync("refreshToken", refreshToken);
     await SecureStore.setItemAsync("user", JSON.stringify(user));
 
-    // 🔐 sempre exigir biometria após login
     await SecureStore.deleteItemAsync("biometricVerifiedAt");
 
     set({
@@ -60,7 +32,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   },
 
   // =========================
-  // REFRESH TOKEN
+  // REFRESH
   // =========================
   updateTokens: async (accessToken, refreshToken) => {
     await SecureStore.setItemAsync("accessToken", accessToken);
@@ -81,8 +53,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     let biometricValid = false;
 
     if (biometricAt) {
-      const diff = Date.now() - Number(biometricAt);
-      biometricValid = diff < BIOMETRIC_TTL_MS;
+      biometricValid = Date.now() - Number(biometricAt) < BIOMETRIC_TTL_MS;
     }
 
     set({
@@ -99,10 +70,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   // BIOMETRIA
   // =========================
   startBiometricCheck: () =>
-    set({
-      isBiometricChecking: true,
-      isBiometricVerified: false,
-    }),
+    set({ isBiometricChecking: true, isBiometricVerified: false }),
 
   verifyBiometric: async () => {
     await SecureStore.setItemAsync(

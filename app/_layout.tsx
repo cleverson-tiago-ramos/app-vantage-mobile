@@ -3,7 +3,7 @@ import { useColorScheme } from "@/hooks/use-color-scheme";
 import { AuthBootstrap } from "@/src/components/auth/AuthBootstrap";
 import { BiometricGate } from "@/src/components/auth/BiometricGate";
 import { ToastProvider } from "@/src/components/toast/ToastProvider";
-import { useAuthStore } from "@/src/store/auth.store";
+import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
