@@ -1,10 +1,8 @@
 import { useLogin } from "@/src/hooks/auth/useLogin";
-import { useRouter } from "expo-router";
 import { useState } from "react";
 
 export function useLoginViewModel() {
   const { login, loading, error } = useLogin();
-  const router = useRouter();
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
@@ -13,10 +11,9 @@ export function useLoginViewModel() {
   async function submit() {
     if (!identifier || !password) return;
 
+    // 🔑 Apenas executa o login
+    // A navegação será decidida pelo RootLayout
     await login(identifier, password);
-
-    // ✅ Redireciona apenas se o login não lançou erro
-    router.replace("/(tabs)");
   }
 
   return {

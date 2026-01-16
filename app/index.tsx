@@ -1,20 +1,10 @@
-//app/index.tsx
-import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
-import { Redirect } from "expo-router";
+// app/index.tsx
+import { Text, View } from "react-native";
 
-/**
- * Entry point da aplicação.
- * Responsável apenas por redirecionar o usuário
- * com base no estado de autenticação.
- */
-export default function Index() {
-  const user = useAuthStore((s) => s.user);
-
-  // Se estiver logado, vai para o app principal
-  if (user) {
-    return <Redirect href="/(tabs)" />;
-  }
-
-  // Caso contrário, vai para o fluxo de autenticação
-  return <Redirect href="/(auth)/login" />;
+export default function TabsHome() {
+  return (
+    <View>
+      <Text>App Logado</Text>
+    </View>
+  );
 }

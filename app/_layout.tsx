@@ -1,4 +1,4 @@
-// app/_layout.tsx
+//app/_layout.tsx
 import { useColorScheme } from "@/hooks/use-color-scheme";
 import { AuthBootstrap } from "@/src/components/auth/AuthBootstrap";
 import { BiometricGate } from "@/src/components/auth/BiometricGate";
@@ -16,10 +16,10 @@ export default function RootLayout() {
 
   const {
     isBootstrapping,
+    isBiometricChecking,
     accessToken,
     requireBiometric,
     isBiometricVerified,
-    isBiometricChecking,
   } = useAuthStore();
 
   useEffect(() => {
@@ -32,17 +32,21 @@ export default function RootLayout() {
     <ToastProvider>
       <AuthBootstrap />
 
-      {accessToken && <BiometricGate />}
+      {/* ✅ BIOMETRIA SÓ RODA UMA VEZ */}
+      {accessToken && requireBiometric && !isBiometricVerified && (
+        <BiometricGate />
+      )}
 
       {!isBootstrapping &&
         !isBiometricChecking &&
         (accessToken && (!requireBiometric || isBiometricVerified) ? (
-          <Stack>
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
           </Stack>
         ) : (
-          <Stack>
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(public)" />
           </Stack>
         ))}
 

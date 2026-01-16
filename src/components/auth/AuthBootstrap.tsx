@@ -12,17 +12,13 @@ export function AuthBootstrap() {
         await store.restoreSession();
 
         const { accessToken } = useAuthStore.getState();
+        if (!accessToken) return;
 
-        if (!accessToken) {
-          return;
-        }
-
-        // valida token (refresh automático já está no interceptor)
         await apiClient.get("/mobile/v1/auth/me");
       } catch {
         await store.clearSession();
       } finally {
-        store.finishBootstrap(); // 🔑 libera a UI
+        store.finishBootstrap();
       }
     }
 

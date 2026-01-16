@@ -17,7 +17,7 @@ export function LoginView() {
   const vm = useLoginViewModel();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-
+  console.log("Rendering LoginView");
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>

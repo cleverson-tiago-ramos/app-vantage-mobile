@@ -1,27 +1,37 @@
 // src/components/auth/BiometricGate.tsx
+// src/components/auth/BiometricGate.tsx
 import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
-import { authenticateWithBiometrics } from "@/src/lib/biometric";
+import * as LocalAuthentication from "expo-local-authentication";
 import { useEffect } from "react";
 
 export function BiometricGate() {
+  const { startBiometricCheck, verifyBiometric, failBiometric } =
+    useAuthStore();
+
   useEffect(() => {
-    async function runBiometric() {
-      const store = useAuthStore.getState();
+    let mounted = true;
 
-      if (!store.requireBiometric || store.isBiometricVerified) return;
+    async function run() {
+      startBiometricCheck();
 
-      store.startBiometricCheck();
+      const result = await LocalAuthentication.authenticateAsync({
+        promptMessage: "Confirme sua identidade",
+      });
 
-      const success = await authenticateWithBiometrics();
+      if (!mounted) return;
 
-      if (success) {
-        store.verifyBiometric();
+      if (result.success) {
+        await verifyBiometric();
       } else {
-        store.failBiometric();
+        await failBiometric();
       }
     }
 
-    runBiometric();
+    run();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return null;
