@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -5,6 +6,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Animated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { styles } from "./styles";
 
 interface ConfirmDialogProps {
@@ -30,12 +37,36 @@ export function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const opacity = useSharedValue(0);
+  const scale = useSharedValue(0.95);
+
+  useEffect(() => {
+    if (visible) {
+      opacity.value = withTiming(1, { duration: 200 });
+      scale.value = withTiming(1, { duration: 200 });
+    } else {
+      opacity.value = withTiming(0, { duration: 150 });
+      scale.value = withTiming(0.95, { duration: 150 }, () =>
+        runOnJS(onCancel)()
+      );
+    }
+  }, [visible]);
+
+  const overlayStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
+
+  const dialogStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
   if (!visible) return null;
 
   return (
-    <Modal transparent animationType="fade" visible={visible}>
-      <View style={styles.overlay}>
-        <View style={styles.container}>
+    <Modal transparent visible animationType="none">
+      <Animated.View style={[styles.overlay, overlayStyle]}>
+        <Animated.View style={[styles.container, dialogStyle]}>
           <Text style={styles.title}>{title}</Text>
 
           <Text style={styles.message}>{message}</Text>
@@ -64,8 +95,8 @@ export function ConfirmDialog({
               )}
             </TouchableOpacity>
           </View>
-        </View>
-      </View>
+        </Animated.View>
+      </Animated.View>
     </Modal>
   );
 }

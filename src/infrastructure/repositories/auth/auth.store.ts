@@ -1,6 +1,6 @@
 // src/infrastructure/repositories/auth/auth.store.ts
 import { BIOMETRIC_TTL_MS } from "@/src/config/security";
-import { AuthStore } from "@/src/domain/auth/AuthStore";
+import { AuthStore } from "@/src/domain/repositories/auth/AuthStore";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 
@@ -24,6 +24,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
   // SESSÃO
   // ======================
   setSession: async (user, accessToken, refreshToken) => {
+    // 🔒 Validação defensiva (OBRIGATÓRIA)
+    if (typeof accessToken !== "string") {
+      throw new Error("accessToken inválido");
+    }
+
+    if (typeof refreshToken !== "string") {
+      throw new Error("refreshToken inválido");
+    }
+
     await SecureStore.setItemAsync("accessToken", accessToken);
     await SecureStore.setItemAsync("refreshToken", refreshToken);
     await SecureStore.setItemAsync("user", JSON.stringify(user));

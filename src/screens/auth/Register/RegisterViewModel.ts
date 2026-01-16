@@ -4,14 +4,15 @@ import {
   CreateUserError,
   useCreateUser,
 } from "@/src/hooks/user/register/useCreateUser";
-import { useAuthStore } from "@/src/infrastructure/repositories/auth/auth.store";
 import { isValidCPF } from "@/src/utils/masks";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+
 export function useRegisterViewModel() {
   const router = useRouter();
   const { execute } = useCreateUser();
   const { showToast } = useToast();
+
   /* ======================
    * STATE
    * ====================== */
@@ -27,7 +28,7 @@ export function useRegisterViewModel() {
 
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const { setSession } = useAuthStore();
+
   /* ======================
    * UX HELPERS
    * ====================== */
@@ -74,23 +75,17 @@ export function useRegisterViewModel() {
    * ====================== */
   const errors = {
     name: touched.name && !name ? "Informe seu nome completo" : undefined,
-
     email: touched.email && !isEmailValid ? "E-mail inválido" : undefined,
-
     cpf: touched.cpf && !isCpfValid ? "CPF inválido" : undefined,
-
     birthDate:
       touched.birthDate && birthDate.length !== 10
         ? "Data inválida"
         : undefined,
-
     gender: touched.gender && !gender ? "Selecione um gênero" : undefined,
-
     password:
       touched.password && !isPasswordStrong
         ? "Senha fraca. Use letras, número e símbolo."
         : undefined,
-
     confirmPassword:
       touched.confirmPassword && password !== confirmPassword
         ? "As senhas não conferem"
@@ -102,7 +97,6 @@ export function useRegisterViewModel() {
    * ====================== */
   async function submit() {
     if (!isFormValid) {
-      // força exibição dos erros
       setTouched({
         name: true,
         email: true,
@@ -114,14 +108,13 @@ export function useRegisterViewModel() {
       });
 
       showToast("Preencha todos os campos obrigatórios corretamente", "error");
-
       return;
     }
 
     try {
       setLoading(true);
 
-      const response = await execute({
+      await execute({
         name,
         email,
         cpf,
@@ -130,14 +123,10 @@ export function useRegisterViewModel() {
         gender: gender!,
       });
 
-      setSession(
-        response.user,
-        response.tokens.accessToken,
-        response.tokens.refreshToken
-      );
+      showToast("Conta criada com sucesso. Faça login.", "success");
 
-      showToast("Conta criada com sucesso", "success");
-      router.replace("/(tabs)");
+      // 👉 cadastro NÃO loga automaticamente
+      router.replace("/(auth)/login");
     } catch (error) {
       if (error instanceof CreateUserError) {
         showToast(error.message, "error");
@@ -153,7 +142,6 @@ export function useRegisterViewModel() {
    * PUBLIC API
    * ====================== */
   return {
-    // values
     name,
     email,
     cpf,
@@ -163,21 +151,18 @@ export function useRegisterViewModel() {
     password,
     confirmPassword,
 
-    // status
     loading,
     errors,
     isFormValid,
 
-    // setters
     setName,
     setEmail,
     setCpf,
     setBirthDate,
-    setGender, // ✅ AQUI
+    setGender,
     setPassword,
     setConfirmPassword,
 
-    // actions
     submit,
     touch,
   };
