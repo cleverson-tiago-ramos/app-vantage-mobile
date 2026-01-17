@@ -1,20 +1,11 @@
-import { colors } from "@/src/components/theme/colors";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import {
-  ActivityIndicator,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
+// src/screens/auth/ForgotPassword/ForgotPasswordView.tsx
+import { AuthLayout } from "@/src/components/auth/AuthLayout";
+import { FormInput } from "@/src/components/form/FormInput";
+import { Button } from "@/src/components/ui/buttons/Button/Button";
 import { ConfirmDialog } from "@/src/components/ui/ConfirmDialog/ConfirmDialog";
 import * as Haptics from "expo-haptics";
+import { useRouter } from "expo-router";
 import { useForgotPasswordViewModel } from "./ForgotPasswordViewModel";
-import { styles } from "./styles";
 
 export function ForgotPasswordView() {
   const vm = useForgotPasswordViewModel();
@@ -22,64 +13,23 @@ export function ForgotPasswordView() {
 
   return (
     <>
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.container}>
-          {/* 🔙 Back */}
-          <TouchableOpacity style={styles.back} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color={colors.primary} />
-          </TouchableOpacity>
+      <AuthLayout title="Recuperar senha">
+        <FormInput
+          label="E-mail ou CPF"
+          value={vm.identifier}
+          onChangeText={vm.setIdentifier}
+          autoCapitalize="none"
+          error={vm.errors.identifier}
+        />
 
-          {/* 🖼 Logo */}
-          <Image
-            source={require("@/assets/images/logo_padrao.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+        <Button
+          title="Enviar instruções"
+          loading={vm.loading}
+          onPress={vm.submit}
+        />
+      </AuthLayout>
 
-          {/* 📄 FORM */}
-          <View style={styles.form}>
-            <Text style={styles.label}>E-mail ou CPF</Text>
-
-            <TextInput
-              style={[
-                styles.input,
-                vm.focus === "identifier" && styles.inputFocused,
-              ]}
-              placeholder="Digite seu e-mail ou CPF"
-              placeholderTextColor="#aaa"
-              value={vm.identifier}
-              onChangeText={vm.setIdentifier}
-              onFocus={() => vm.setFocus("identifier")}
-              onBlur={() => vm.setFocus(null)}
-              autoCapitalize="none"
-              editable={!vm.loading}
-            />
-
-            {vm.error && <Text style={styles.error}>{vm.error}</Text>}
-
-            <TouchableOpacity
-              style={[styles.button, vm.loading && styles.buttonDisabled]}
-              onPress={vm.submit}
-              disabled={vm.loading}
-            >
-              {vm.loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.buttonText}>Enviar instruções</Text>
-              )}
-            </TouchableOpacity>
-
-            <Text
-              style={styles.register}
-              onPress={() => router.replace("/(auth)/login")}
-            >
-              Voltar para o login
-            </Text>
-          </View>
-        </View>
-      </SafeAreaView>
-
-      {/* ✅ CONFIRM DIALOG CONTROLADO PELO VM */}
+      {/* ✅ CONFIRM DIALOG — PADRÃO UNIFICADO */}
       <ConfirmDialog
         visible={vm.dialog.visible}
         title="Recuperação de senha"
@@ -92,6 +42,7 @@ export function ForgotPasswordView() {
           vm.dialog.confirm(async () => {
             await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             vm.dialog.close();
+
             router.replace({
               pathname: "/(auth)/reset-password",
               params: { identifier: vm.identifier },

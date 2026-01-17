@@ -3,29 +3,35 @@ import { useForgotPassword } from "@/src/hooks/auth/useForgotPassword";
 import { useConfirmDialog } from "@/src/hooks/ui/useConfirmDialog";
 import { useEffect, useState } from "react";
 
+type Errors = {
+  identifier?: string;
+};
+
 export function useForgotPasswordViewModel() {
   const { forgotPassword, loading, error, success } = useForgotPassword();
   const dialog = useConfirmDialog();
 
   const [identifier, setIdentifier] = useState("");
-  const [focus, setFocus] = useState<"identifier" | null>(null);
-  const [localError, setLocalError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Errors>({});
 
   async function submit() {
+    const newErrors: Errors = {};
+
     if (!identifier) {
-      setLocalError("Informe seu e-mail ou CPF");
-      return;
+      newErrors.identifier = "Informe seu e-mail ou CPF";
     }
 
-    setLocalError(null);
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length > 0) return;
+
     await forgotPassword(identifier);
   }
 
-  // 🔥 reação correta ao sucesso (efeito colateral)
   useEffect(() => {
     if (success) {
-      setIdentifier(""); // limpa campo
-      dialog.open(); // abre ConfirmDialog
+      setErrors({});
+      dialog.open();
     }
   }, [success]);
 
@@ -33,14 +39,14 @@ export function useForgotPasswordViewModel() {
     identifier,
     setIdentifier,
 
-    focus,
-    setFocus,
-
     submit,
 
     loading,
-    error: localError || error,
+    errors: {
+      ...errors,
+      identifier: errors.identifier || error,
+    },
 
-    dialog, // 👈 EXPOSTO PARA A VIEW
+    dialog,
   };
 }
