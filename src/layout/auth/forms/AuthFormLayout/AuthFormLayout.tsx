@@ -1,4 +1,4 @@
-// src/components/auth/AuthFormLayout/AuthFormLayout.tsx
+//src/layout/auth/forms/AuthFormLayout/AuthFormLayout.tsx
 import { colors } from "@/src/components/theme/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -20,11 +20,10 @@ export function AuthFormLayout({ title, subtitle, children }: Props) {
       <View style={styles.container}>
         {/* HEADER */}
         <View style={styles.header}>
-          <View style={styles.arrowBack}>
-            <TouchableOpacity onPress={() => router.back()}>
-              <Ionicons name="arrow-back" size={24} color={colors.primary} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.back} onPress={router.back}>
+            <Ionicons name="arrow-back" size={24} color={colors.primary} />
+          </TouchableOpacity>
+
           <Image
             source={require("@/assets/images/logo_padrao.png")}
             style={styles.logo}
@@ -32,13 +31,13 @@ export function AuthFormLayout({ title, subtitle, children }: Props) {
           />
         </View>
 
-        {/* FORM CARD */}
-        <View style={styles.form}>
+        {/* CARD */}
+        <View style={styles.card}>
           <Text style={styles.title}>{title}</Text>
 
-          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          {!!subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
 
-          <View style={styles.content}>{children}</View>
+          {children}
         </View>
       </View>
     </SafeAreaView>
