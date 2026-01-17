@@ -1,4 +1,3 @@
-// src/hooks/auth/useResetPassword.ts
 import { apiClient } from "@/src/api/apiClient";
 import { useState } from "react";
 
@@ -12,22 +11,23 @@ interface ResetPasswordPayload {
 export function useResetPassword() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
 
-  async function resetPassword(payload: ResetPasswordPayload) {
+  async function resetPassword(
+    payload: ResetPasswordPayload,
+  ): Promise<boolean> {
     try {
       setLoading(true);
       setError(null);
-      setSuccess(false);
 
       await apiClient.post("/mobile/v1/auth/reset-password", payload);
 
-      setSuccess(true);
+      return true;
     } catch (err: any) {
       setError(
         err?.response?.data?.message ??
           "Erro ao redefinir a senha. Tente novamente.",
       );
+      return false;
     } finally {
       setLoading(false);
     }
@@ -37,6 +37,5 @@ export function useResetPassword() {
     resetPassword,
     loading,
     error,
-    success,
   };
 }

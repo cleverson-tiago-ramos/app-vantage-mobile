@@ -12,7 +12,7 @@ export function useForgotPasswordViewModel() {
   const [errors, setErrors] = useState<{ identifier?: string }>({});
 
   async function submit() {
-    if (!identifier) {
+    if (!identifier.trim()) {
       setErrors({ identifier: "Informe seu e-mail ou CPF" });
       return;
     }
@@ -21,7 +21,6 @@ export function useForgotPasswordViewModel() {
     await forgotPassword(identifier);
   }
 
-  // 🔥 AQUI acontece o redirect para o reset
   useEffect(() => {
     if (success) {
       dialog.open();
@@ -29,10 +28,7 @@ export function useForgotPasswordViewModel() {
   }, [success]);
 
   function goToReset() {
-    router.replace({
-      pathname: "/(auth)/reset-password",
-      params: { identifier },
-    });
+    router.replace("/(auth)/reset-password");
   }
 
   return {

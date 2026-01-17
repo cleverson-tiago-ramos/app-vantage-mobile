@@ -36,7 +36,7 @@ export function ForgotPasswordView() {
       <ConfirmDialog
         visible={vm.dialog.visible}
         title="Recuperação de senha"
-        message="Se os dados estiverem corretos, enviamos um código para você."
+        message="Se os dados estiverem corretos, você receberá um código no email cadastrado para redefinir sua senha."
         confirmText="Continuar"
         cancelText="Cancelar"
         onCancel={vm.dialog.close}

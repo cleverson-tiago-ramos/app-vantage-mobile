@@ -1,17 +1,32 @@
-export function onlyNumbers(value: string) {
+// CPF 000.000.000-00
+export function onlyNumbers(value: string): string {
   return value.replace(/\D/g, "");
 }
 
 // CPF 000.000.000-00
-export function maskCPF(value: string) {
+export function maskCPF(value: string): string {
   const numbers = onlyNumbers(value).slice(0, 11);
 
-  if (numbers.length <= 3) return numbers;
-  if (numbers.length <= 6) return numbers.replace(/(\d{3})(\d+)/, "$1.$2");
-  if (numbers.length <= 9)
-    return numbers.replace(/(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
+  switch (numbers.length) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return numbers;
 
-  return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+    case 4:
+    case 5:
+    case 6:
+      return numbers.replace(/(\d{3})(\d+)/, "$1.$2");
+
+    case 7:
+    case 8:
+    case 9:
+      return numbers.replace(/(\d{3})(\d{3})(\d+)/, "$1.$2.$3");
+
+    default:
+      return numbers.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+  }
 }
 
 // Data dd/mm/aaaa
