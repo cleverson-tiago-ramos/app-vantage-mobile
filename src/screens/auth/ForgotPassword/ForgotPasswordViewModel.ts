@@ -1,52 +1,49 @@
-// src/screens/auth/ForgotPassword/ForgotPasswordViewModel.ts
 import { useForgotPassword } from "@/src/hooks/auth/useForgotPassword";
 import { useConfirmDialog } from "@/src/hooks/ui/useConfirmDialog";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
-type Errors = {
-  identifier?: string;
-};
-
 export function useForgotPasswordViewModel() {
+  const router = useRouter();
   const { forgotPassword, loading, error, success } = useForgotPassword();
   const dialog = useConfirmDialog();
 
   const [identifier, setIdentifier] = useState("");
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<{ identifier?: string }>({});
 
   async function submit() {
-    const newErrors: Errors = {};
-
     if (!identifier) {
-      newErrors.identifier = "Informe seu e-mail ou CPF";
+      setErrors({ identifier: "Informe seu e-mail ou CPF" });
+      return;
     }
 
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) return;
-
+    setErrors({});
     await forgotPassword(identifier);
   }
 
+  // 🔥 AQUI acontece o redirect para o reset
   useEffect(() => {
     if (success) {
-      setErrors({});
       dialog.open();
     }
   }, [success]);
 
+  function goToReset() {
+    router.replace({
+      pathname: "/(auth)/reset-password",
+      params: { identifier },
+    });
+  }
+
   return {
     identifier,
     setIdentifier,
-
     submit,
-
     loading,
     errors: {
-      ...errors,
       identifier: errors.identifier || error,
     },
-
     dialog,
+    goToReset,
   };
 }

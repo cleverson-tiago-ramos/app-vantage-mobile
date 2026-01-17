@@ -1,8 +1,8 @@
+// src/screens/auth/ResetPassword/ResetPasswordViewModel.ts
 import { useResetPassword } from "@/src/hooks/auth/useResetPassword";
 import { useConfirmDialog } from "@/src/hooks/ui/useConfirmDialog";
-import { usePasswordValidation } from "@/src/hooks/validation/usePasswordValidation";
 import { useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Errors = {
   identifier?: string;
@@ -13,49 +13,32 @@ type Errors = {
 
 export function useResetPasswordViewModel() {
   const params = useLocalSearchParams<{ identifier?: string }>();
+
+  const identifier = useMemo(
+    () => params.identifier ?? "",
+    [params.identifier],
+  );
+
   const { resetPassword, loading, error, success } = useResetPassword();
   const dialog = useConfirmDialog();
 
-  /* ======================
-   * STATE
-   * ====================== */
-  const [identifier, setIdentifier] = useState(params.identifier ?? "");
   const [pin, setPin] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const [errors, setErrors] = useState<Errors>({});
 
-  /* ======================
-   * PASSWORD VALIDATION
-   * ====================== */
-  const { isStrong } = usePasswordValidation(password);
-
-  /* ======================
-   * SUBMIT
-   * ====================== */
   async function submit() {
     const newErrors: Errors = {};
 
-    if (!identifier) {
-      newErrors.identifier = "Informe seu e-mail ou CPF";
-    }
-
-    if (pin.length !== 6) {
-      newErrors.pin = "O código deve conter 6 dígitos";
-    }
-
-    if (!isStrong) {
-      newErrors.password =
-        "Senha fraca. Use no mínimo 8 caracteres, letra maiúscula, número e símbolo.";
-    }
-
-    if (password !== confirmPassword) {
+    if (!identifier)
+      newErrors.identifier = "Identificador ausente. Volte e tente novamente.";
+    if (pin.length !== 6) newErrors.pin = "O código deve conter 6 dígitos";
+    if (password.length < 8) newErrors.password = "Mínimo de 8 caracteres";
+    if (password !== confirmPassword)
       newErrors.confirmPassword = "As senhas não conferem";
-    }
 
     setErrors(newErrors);
-
     if (Object.keys(newErrors).length > 0) return;
 
     await resetPassword({
@@ -66,9 +49,6 @@ export function useResetPasswordViewModel() {
     });
   }
 
-  /* ======================
-   * SUCCESS EFFECT
-   * ====================== */
   useEffect(() => {
     if (success) {
       setPin("");
@@ -77,30 +57,24 @@ export function useResetPasswordViewModel() {
       setErrors({});
       dialog.open();
     }
-  }, [success]);
+  }, [success, dialog]);
 
-  /* ======================
-   * PUBLIC API
-   * ====================== */
   return {
-    identifier,
-    setIdentifier,
-
+    identifier, // se você quiser mostrar em algum lugar
     pin,
     setPin,
-
     password,
     setPassword,
-
     confirmPassword,
     setConfirmPassword,
 
     submit,
-
     loading,
+
+    // backend error entra como identifier (padrão seu)
     errors: {
       ...errors,
-      identifier: errors.identifier || error,
+      identifier: errors.identifier || error || undefined,
     },
 
     dialog,
