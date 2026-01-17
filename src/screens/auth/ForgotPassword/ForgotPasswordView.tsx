@@ -92,7 +92,10 @@ export function ForgotPasswordView() {
           vm.dialog.confirm(async () => {
             await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             vm.dialog.close();
-            router.replace("/(auth)/login");
+            router.replace({
+              pathname: "/(auth)/reset-password",
+              params: { identifier: vm.identifier },
+            });
           })
         }
       />
